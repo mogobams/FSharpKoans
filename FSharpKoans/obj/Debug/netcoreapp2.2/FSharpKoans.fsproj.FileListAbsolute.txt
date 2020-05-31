@@ -1,0 +1,13 @@
+C:\users\matlhatse\desktop\fsharpPrac1\FSharpKoans\FSharpKoans\bin\Debug\netcoreapp2.2\NUnit3.TestAdapter.dll
+C:\users\matlhatse\desktop\fsharpPrac1\FSharpKoans\FSharpKoans\bin\Debug\netcoreapp2.2\NUnit3.TestAdapter.pdb
+C:\users\matlhatse\desktop\fsharpPrac1\FSharpKoans\FSharpKoans\bin\Debug\netcoreapp2.2\nunit.engine.netstandard.dll
+C:\users\matlhatse\desktop\fsharpPrac1\FSharpKoans\FSharpKoans\bin\Debug\netcoreapp2.2\FSharpKoans.deps.json
+C:\users\matlhatse\desktop\fsharpPrac1\FSharpKoans\FSharpKoans\bin\Debug\netcoreapp2.2\FSharpKoans.runtimeconfig.json
+C:\users\matlhatse\desktop\fsharpPrac1\FSharpKoans\FSharpKoans\bin\Debug\netcoreapp2.2\FSharpKoans.runtimeconfig.dev.json
+C:\users\matlhatse\desktop\fsharpPrac1\FSharpKoans\FSharpKoans\bin\Debug\netcoreapp2.2\FSharpKoans.dll
+C:\users\matlhatse\desktop\fsharpPrac1\FSharpKoans\FSharpKoans\bin\Debug\netcoreapp2.2\FSharpKoans.pdb
+C:\users\matlhatse\desktop\fsharpPrac1\FSharpKoans\FSharpKoans\obj\Debug\netcoreapp2.2\FSharpKoans.AssemblyInfoInputs.cache
+C:\users\matlhatse\desktop\fsharpPrac1\FSharpKoans\FSharpKoans\obj\Debug\netcoreapp2.2\FSharpKoans.AssemblyInfo.fs
+C:\users\matlhatse\desktop\fsharpPrac1\FSharpKoans\FSharpKoans\obj\Debug\netcoreapp2.2\FSharpKoans.dll
+C:\users\matlhatse\desktop\fsharpPrac1\FSharpKoans\FSharpKoans\obj\Debug\netcoreapp2.2\FSharpKoans.pdb
+C:\Users\Matlhatse\Desktop\fsharpPrac1\FSharpKoans\FSharpKoans\obj\Debug\netcoreapp2.2\FSharpKoans.fsprojAssemblyReference.cache
