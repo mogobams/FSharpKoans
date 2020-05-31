@@ -1,0 +1,2265 @@
+[1mdiff --git a/.gitignore b/.gitignore[m
+[1mdeleted file mode 100755[m
+[1mindex 24270ee..0000000[m
+[1m--- a/.gitignore[m
+[1m+++ /dev/null[m
+[36m@@ -1,11 +0,0 @@[m
+[31m-FSharpKoans.Core/bin/[m
+[31m-FSharpKoans.Core/obj/[m
+[31m-FSharpKoans/bin/[m
+[31m-FSharpKoans/obj/[m
+[31m-FSharpKoans.Test/bin/[m
+[31m-FSharpKoans.Test/obj/[m
+[31m-FSharpKoans2008.suo[m
+[31m-FSharpKoans2010.suo[m
+[31m-packages/[m
+[31m-*.suo[m
+[31m-.vs[m
+\ No newline at end of file[m
+[1mdiff --git a/ExplorerScreenshot.jpg b/ExplorerScreenshot.jpg[m
+[1mdeleted file mode 100644[m
+[1mindex 51c3e7f..0000000[m
+Binary files a/ExplorerScreenshot.jpg and /dev/null differ
+[1mdiff --git a/FSharpKoans.sln b/FSharpKoans.sln[m
+[1mindex 5457c2a..8ea6b57 100755[m
+[1m--- a/FSharpKoans.sln[m
+[1m+++ b/FSharpKoans.sln[m
+[36m@@ -1,9 +1,9 @@[m
+ ﻿[m
+ Microsoft Visual Studio Solution File, Format Version 12.00[m
+[31m-# Visual Studio 15[m
+[31m-VisualStudioVersion = 15.0.26124.0[m
+[32m+[m[32m# Visual Studio Version 16[m[41m[m
+[32m+[m[32mVisualStudioVersion = 16.0.29806.167[m[41m[m
+ MinimumVisualStudioVersion = 15.0.26124.0[m
+[31m-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharpKoans", "FSharpKoans\FSharpKoans.fsproj", "{C0CC8070-B412-4394-B40B-96A7B9BD6F61}"[m
+[32m+[m[32mProject("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "FSharpKoans", "FSharpKoans\FSharpKoans.fsproj", "{C0CC8070-B412-4394-B40B-96A7B9BD6F61}"[m[41m[m
+ EndProject[m
+ Global[m
+ 	GlobalSection(SolutionConfigurationPlatforms) = preSolution[m
+[36m@@ -14,9 +14,6 @@[m [mGlobal[m
+ 		Release|x64 = Release|x64[m
+ 		Release|x86 = Release|x86[m
+ 	EndGlobalSection[m
+[31m-	GlobalSection(SolutionProperties) = preSolution[m
+[31m-		HideSolutionNode = FALSE[m
+[31m-	EndGlobalSection[m
+ 	GlobalSection(ProjectConfigurationPlatforms) = postSolution[m
+ 		{C0CC8070-B412-4394-B40B-96A7B9BD6F61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU[m
+ 		{C0CC8070-B412-4394-B40B-96A7B9BD6F61}.Debug|Any CPU.Build.0 = Debug|Any CPU[m
+[36m@@ -31,4 +28,10 @@[m [mGlobal[m
+ 		{C0CC8070-B412-4394-B40B-96A7B9BD6F61}.Release|x86.ActiveCfg = Release|Any CPU[m
+ 		{C0CC8070-B412-4394-B40B-96A7B9BD6F61}.Release|x86.Build.0 = Release|Any CPU[m
+ 	EndGlobalSection[m
+[32m+[m	[32mGlobalSection(SolutionProperties) = preSolution[m[41m[m
+[32m+[m		[32mHideSolutionNode = FALSE[m[41m[m
+[32m+[m	[32mEndGlobalSection[m[41m[m
+[32m+[m	[32mGlobalSection(ExtensibilityGlobals) = postSolution[m[41m[m
+[32m+[m		[32mSolutionGuid = {7E9FCEF5-ED02-47C0-AC54-E3664C91037D}[m[41m[m
+[32m+[m	[32mEndGlobalSection[m[41m[m
+ EndGlobal[m
+[1mdiff --git a/FSharpKoans/AboutBinding.fs b/FSharpKoans/AboutBinding.fs[m
+[1mdeleted file mode 100644[m
+[1mindex 971c7b2..0000000[m
+[1m--- a/FSharpKoans/AboutBinding.fs[m
+[1m+++ /dev/null[m
+[36m@@ -1,190 +0,0 @@[m
+[31m-﻿namespace FSharpKoans[m
+[31m-open NUnit.Framework[m
+[31m-[m
+[31m-(*[m
+[31m-Consider a simple program:[m
+[31m-[m
+[31m-    let answer = 4 + 5[m
+[31m-    answer + 2[m
+[31m-[m
+[31m-The value on the right (i.e. 9) is BOUND to the pattern on the left.  The pattern[m
+[31m-on the left happens to be an identifier.  On any subsequent line, we can use the[m
+[31m-identifier `answer` and the value 9 will be substituted for it.  The result of the[m
+[31m-program is therefore 11.  In reality, what we are saying is[m
+[31m-[m
+[31m-    let answer = 4 + 5 in[m
+[31m-        answer + 2[m
+[31m-[m
+[31m-(that's valid F#, by the way).  Can you see that, explicitly, we are binding the value 9[m
+[31m-to the identifier `answer`, to be used in the expression `answer + 2`?[m
+[31m-[m
+[31m-Now, let's make this a bit more general:[m
+[31m-[m
+[31m-    let first = 4[m
+[31m-    let second = 5[m
+[31m-    let answer = first + second[m
+[31m-    answer + 2[m
+[31m-[m
+[31m-What are we actually saying here?  We are saying:[m
+[31m-[m
+[31m-    let first = 4 in[m
+[31m-        let second = 5 in[m
+[31m-            let answer = first + second in[m
+[31m-                answer + 2[m
+[31m-[m
+[31m-Contemplate how this "chain" of substitution works until you think that[m
+[31m-you see what's going on.[m
+[31m-[m
+[31m-Now, a newbie functional programmer might be tempted to write something[m
+[31m-like this in a function:[m
+[31m-[m
+[31m-    let first = 4[m
+[31m-    let second = 5[m
+[31m-    let answer = first + second[m
+[31m-[m
+[31m-...but that doesn't compile!  What's going on?!  Well, expand it a bit, and you'll[m
+[31m-see that it actually means:[m
+[31m-[m
+[31m-    let first = 4 in[m
+[31m-        let second = 5 in[m
+[31m-            let answer = first + second in[m
+[31m-[m
+[31m-There's no expression that actually ends the chain.  And because there's no[m
+[31m-expression that ends the chain, there's nothing to substitute all of these[m
+[31m-values into.  Without an expression, there's no point in all of these bindings,[m
+[31m-and the F# compiler will refuse to accept nonsensical code.[m
+[31m-*)[m
+[31m-[m
+[31m-module ``02: About Binding`` = [m
+[31m-    // this should look like code that you're familiar with, perhaps from C#.[m
+[31m-    [<Test>][m
+[31m-    let ``01 Basic 'let' binding`` () = [m
+[31m-        let x = 50 in // note that the syntax is more explicit about what's really going on![m
+[31m-            x |> should equal 50[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``02 Equivalent basic 'let' binding`` () = // this is exactly equivalent to the previous binding.[m
+[31m-        let x = 50[m
+[31m-        x |> should equal 50[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``03 There are many types of values`` () =[m
+[31m-        let a = 12[m
+[31m-        let b = 15.8[m
+[31m-        let c = false[m
+[31m-        let d = "meetseashele"[m
+[31m-        let e = 's'[m
+[31m-        let f = ()[m
+[31m-        a |> should be ofType<int>[m
+[31m-        b |> should be ofType<float>[m
+[31m-        c |> should be ofType<bool>[m
+[31m-        d |> should be ofType<string>[m
+[31m-        e |> should be ofType<char>[m
+[31m-        f |> should be ofType<unit>[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``04 We can compare values using F#'s comparison operators`` () =[m
+[31m-        1 < 2 |> should equal true // change the |???| to be an actual operator[m
+[31m-        2 > 1 |> should equal true[m
+[31m-        1 = 1 |> should equal true[m
+[31m-        1 <> 1 |> should equal false[m
+[31m-        () = () |> should equal true[m
+[31m-        () > () |> should equal false[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``05 There's a `not` function instead of a `not` operator`` () =[m
+[31m-        not true |> should equal false[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``06 Nest your 'let' statements as deeply as you'd like`` () =[m
+[31m-        let a =[m
+[31m-            let b =[m
+[31m-                let c =[m
+[31m-                    let d = 63 in d[m
+[31m-                c + 1[m
+[31m-            b + 7[m
+[31m-        a |> should equal 71[m
+[31m-[m
+[31m-(*[m
+[31m-    Identifiers are *referentially transparent*: the link between value and identifier never changes.[m
+[31m-    However, identifiers may be *shadowed*.  The best way to explain this is with an example.[m
+[31m-[m
+[31m-        let quex = 10[m
+[31m-        let quex = 19[m
+[31m-        let quex = 5 + quex[m
+[31m-        let quex = "Something"[m
+[31m-[m
+[31m-    In this example, the identifier `quex` is bound four times.[m
+[31m-[m
+[31m-    The first `quex` identifier is bound to the value 10.  On the next line, the `quex`[m
+[31m-    identifier is bound to the value 19.  This does NOT CHANGE the value of the first[m
+[31m-    `quex` identifier.  The first `quex` identifier continues to exist, and continues to[m
+[31m-    have the value `19`.  However, subsequent lines that use the value `quex` will use[m
+[31m-    the most-recently-bound `quex`: we say that the first binding of `quex` has been[m
+[31m-    *shadowed* by the second binding.  So the third binding of `quex` is has the value[m
+[31m-    24.  Lastly, the identifier `quex` is bound to "Something".[m
+[31m-[m
+[31m-    "Well," you may be thinking, "there are fancy words here, but it's basically the[m
+[31m-    same effect as changing a value, so I'll just think about it as changing a value."[m
+[31m-    Later on, when we do match expressions and functions and other basic things[m
+[31m-    like that, the distinction becomes very important.  If you get into the wrong way[m
+[31m-    of thinking about it now, you'll really mess yourself up later on.[m
+[31m-*)[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``07 Shadowing`` () =[m
+[31m-        let a = 21[m
+[31m-        let b =[m
+[31m-            let a = 8[m
+[31m-            3 + a[m
+[31m-        let c = a + 4[m
+[31m-        let a = a + a[m
+[31m-        a |> should equal 42[m
+[31m-        b |> should equal 11[m
+[31m-        c |> should equal 25[m
+[31m-[m
+[31m-   [m
+[31m-   (*[m
+[31m-    What's a pattern?  A pattern is something that expresses the SHAPE of data.  Data may[m
+[31m-    match the shape, or it may not match the shape.  IF AND ONLY IF it matches the shape, then[m
+[31m-    any identifiers in the pattern are bound.[m
+[31m-[m
+[31m-    When you understand this, you will understand almost everything there is to know about[m
+[31m-    patterns :).[m
+[31m-   *)[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``08 An identifier pattern will match anything`` () =[m
+[31m-        let x = 16 // replace with an integer[m
+[31m-        let y = "meetseashele" // replace with a string[m
+[31m-        let z = 16.08 // replace with anything else![m
+[31m-        x |> should be ofType<int>[m
+[31m-        y |> should be ofType<string>[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``09 A wildcard pattern will match anything`` () =[m
+[31m-        let _ = 16 // replace with an integer[m
+[31m-        let _ = "meetseashele" // replace with a string[m
+[31m-        let _ = 16.08 // replace with anything else![m
+[31m-        ()[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``10 Constant patterns succeed if both sides match`` () =[m
+[31m-        let 900 = 300 + 250 + 245 + 105[m
+[31m-        let "Can't win all the time" = "Can't win all the time"[m
+[31m-        ()[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``11 Constant patterns fail if the sides don't match exactly`` () =[m
+[31m-        // fill in something below, on the right-hand side, to make this pattern FAIL[m
+[31m-        (fun () ->[m
+[31m-            let "FILL ME IN" = "I don't want to fill you in!"[m
+[31m-            ()[m
+[31m-        ) |> should throw typeof<MatchFailureException>[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``12 Or patterns succeed if any pattern matches`` () =[m
+[31m-        let a | a = 16[m
+[31m-        let 7 | 13 | 2 = 3 + 10[m
+[31m-        let 'x' | _ | 'p' = 'x'[m
+[31m-        ()[m
+\ No newline at end of file[m
+[1mdiff --git a/FSharpKoans/AboutDiscriminatedUnions.fs b/FSharpKoans/AboutDiscriminatedUnions.fs[m
+[1mdeleted file mode 100755[m
+[1mindex edaf760..0000000[m
+[1m--- a/FSharpKoans/AboutDiscriminatedUnions.fs[m
+[1m+++ /dev/null[m
+[36m@@ -1,92 +0,0 @@[m
+[31m-﻿namespace FSharpKoans[m
+[31m-open NUnit.Framework[m
+[31m-[m
+[31m-(*[m
+[31m-    A discriminated union is a disjoint set of named cases, where each case[m
+[31m-    may have some linked/associated data.  If a discriminated union case has[m
+[31m-    associated data, the case name is a function which takes the associated[m
+[31m-    data as input and gives a value of the discriminated union type as output.[m
+[31m-*)[m
+[31m-[m
+[31m-[m
+[31m-module ``07: The Good Kind of Discrimination`` = [m
+[31m-    type Subject = // <-- feel free to add your own subjects![m
+[31m-    | Philosophy[m
+[31m-    | Linguistics[m
+[31m-    | ComputerScience[m
+[31m-    | Mathematics[m
+[31m-    | Economics[m
+[31m-    | Management[m
+[31m-    | Statistics[m
+[31m-[m
+[31m-    type UndergraduateDegree = [m
+[31m-    | BSc of first:Subject * second:Subject[m
+[31m-    | BCom of first:Subject * second:Subject[m
+[31m-    | BPharm[m
+[31m-    | BA of first:Subject * second:Subject[m
+[31m-[m
+[31m-    type PostgraduateDegree =[m
+[31m-    | Honours of Subject[m
+[31m-    | Masters of Subject[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``01 A case isn't the same as a type`` () = [m
+[31m-        let aDegree = BSc (Linguistics, ComputerScience)[m
+[31m-        let anotherDegree = BPharm[m
+[31m-        let philosopherKing = Masters Philosophy[m
+[31m-        aDegree |> should be ofType<UndergraduateDegree> [m
+[31m-        anotherDegree |> should be ofType<UndergraduateDegree> [m
+[31m-        philosopherKing |> should be ofType<PostgraduateDegree> [m
+[31m-   [m
+[31m-    [<Test>][m
+[31m-    let ``02 Creating & pattern-matching a discriminated union`` () = [m
+[31m-        let randomOpinion degree =[m
+[31m-            match degree with[m
+[31m-            | BSc (_, ComputerScience) | BSc (ComputerScience, _) -> "Good choice!"[m
+[31m-            | BSc _ -> "!!SCIENCE!!"[m
+[31m-            | BPharm -> "Meh, it's OK."[m
+[31m-            | BCom (_, Management) | BCom (Management, _) -> "Money, money, money."[m
+[31m-            | BA (Linguistics, Philosophy) -> "A thinker, eh?"[m
+[31m-        randomOpinion (BSc (ComputerScience, Mathematics)) |> should equal "Good choice!"[m
+[31m-        randomOpinion (BSc (Mathematics, Statistics)) |> should equal "!!SCIENCE!!"[m
+[31m-        randomOpinion (BCom (Management, Economics)) |> should equal "Money, money, money."[m
+[31m-        randomOpinion (BCom (Linguistics, Management)) |> should equal "Money, money, money."[m
+[31m-        randomOpinion (BA (Linguistics, Philosophy)) |> should equal "A thinker, eh?"[m
+[31m-        randomOpinion BPharm |> should equal "Meh, it's OK."[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``03 We can create a discriminated union using named fields`` () =[m
+[31m-        let someDegree = BSc (second = Mathematics, first = ComputerScience)            [m
+[31m-        someDegree |> should equal (BSc (ComputerScience, Mathematics))[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``04 Pattern-matching using named fields`` () =[m
+[31m-        let result =[m
+[31m-            match BSc (Management, ComputerScience) with[m
+[31m-            | BSc (second = ComputerScience; first = Management) -> "correct" // <-- USE a pattern-match with named fields![m
+[31m-            | _ -> "nope"[m
+[31m-        result |> should equal "correct"[m
+[31m-[m
+[31m-    type EquipmentStatus =[m
+[31m-    | Available[m
+[31m-    | Broken of daysToRepair:int[m
+[31m-    | Rented of renter:string[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``05 A discriminated union case with associated data is a function`` () =[m
+[31m-        Broken |> should be ofType<int -> EquipmentStatus>[m
+[31m-        Rented |> should be ofType<string -> EquipmentStatus>[m
+[31m-[m
+[31m-    type BinaryTree =[m
+[31m-    | Empty[m
+[31m-    | Node of string * BinaryTree * BinaryTree[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``06 A discriminated union can refer to itself (i.e., it can be recursive).`` () =[m
+[31m-        let rec depth x =[m
+[31m-            match x with[m
+[31m-            | Empty -> 0[m
+[31m-            | Node (_, a, b) -> 1 + max (depth a) (depth b)[m
+[31m-        let a = [m
+[31m-            Node ("branch1", Node ("branch2", Empty, Node ("branch3", Node ("branch4", Empty, Empty), Empty)), Empty)// <-- you may want to spread this over multiple lines and/or let-bindings ...![m
+[31m-        depth a |> should equal 4[m
+[1mdiff --git a/FSharpKoans/AboutFunctions.fs b/FSharpKoans/AboutFunctions.fs[m
+[1mdeleted file mode 100755[m
+[1mindex 75cf156..0000000[m
+[1m--- a/FSharpKoans/AboutFunctions.fs[m
+[1m+++ /dev/null[m
+[36m@@ -1,414 +0,0 @@[m
+[31m-﻿namespace FSharpKoans[m
+[31m-open NUnit.Framework[m
+[31m-[m
+[31m-(*[m
+[31m-    A function maps a single input to a single output.  Functions in functional[m
+[31m-    languages (and an increasing number of non-functional languages!) are[m
+[31m-    *first-class*.  This means that they can be used in every context that[m
+[31m-    a variable can be used in.  You'll see them passed around as arguments[m
+[31m-    and returned from functions, for example.[m
+[31m-[m
+[31m-    When it comes right down to it, that's the essence of computation:[m
+[31m-    taking inputs and mapping them to outputs in line with some logic.[m
+[31m-    Unsurprisingly, functions are used everywhere in functional programming![m
+[31m-    In fact, in some other functional languages, things like if-statements are[m
+[31m-    just functions rather than keywords.[m
+[31m-*)[m
+[31m-[m
+[31m-module ``03: Putting the Function into Functional Programming`` = [m
+[31m-    [<Test>][m
+[31m-    let ``01 A function takes one input and produces one output`` () =[m
+[31m-        (fun a -> a + 100) 1997 |> should equal 2097[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``02 The input to a function is a pattern (Part 1).`` () =[m
+[31m-        (fun 7 -> 9) 7 |> should equal 9[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``03 The input to a function is a pattern (Part 2).`` () =[m
+[31m-        (fun _ -> 75) 60 |> should equal 75[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``04 The input to a function is a pattern (Part 3).`` () =[m
+[31m-        (fun (2 | 3 | 5) -> "Prime") 3 |> should equal "Prime"[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``05 A function can be bound to a name (Part 1).`` () =[m
+[31m-        let one_third = fun ka -> ka / 3[m
+[31m-        one_third 21 |> should equal 7[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``06 A function can be bound to a name (Part 2).`` () =[m
+[31m-        let pinky bleh = bleh / 3 // The syntax has changed from Part 1, but the meaning is the same[m
+[31m-        pinky 21 |> should equal 7[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``07 A function can span multiple lines (Part 1).`` () =[m
+[31m-        (fun zorro ->[m
+[31m-            let k = "swash" // notice the indentation.[m
+[31m-            let b = "buckle" // F# is whitespace-sensitive, so it is important![m
+[31m-            zorro + " likes to " + k + b[m
+[31m-        ) "Zorro the pirate" |> should equal "Zorro the pirate likes to swashbuckle"[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``08 A function can span multiple lines (Part 2).`` () =[m
+[31m-        let jorus who =[m
+[31m-            let p = 5[m
+[31m-            who * p[m
+[31m-        jorus 12 |> should equal 60[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``09 A function can span multiple lines (Part 2, expanded syntax).`` () =[m
+[31m-        // This is largely the same as the previous test; the syntax is just more explicit.[m
+[31m-        // Does the syntax make what's going on more clear?[m
+[31m-        let jorus =[m
+[31m-            fun who ->[m
+[31m-                let p = 3 in[m
+[31m-                    who * p[m
+[31m-        in[m
+[31m-            jorus 12 |> should equal 36[m
+[31m-[m
+[31m-    // The next few are very similar.  Resist the temptation to[m
+[31m-    // just fill out values without having any idea about what's[m
+[31m-    // going on!  Learn the different forms of the syntax.  You[m
+[31m-    // will have to understand and apply these in your own code.[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``10 A function can return a function (Part 1).`` () =[m
+[31m-        let i = fun love -> fun hate -> love - hate[m
+[31m-        // read the above as: fun love -> (fun hate -> (love - hate))[m
+[31m-        let j = i 10[m
+[31m-        let k = j 9[m
+[31m-        k |> should equal 1[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``11 A function can return a function (Part 2).`` () =[m
+[31m-        let funky a b = a + b[m
+[31m-        let j = funky 10[m
+[31m-        let k = j 9[m
+[31m-        k |> should equal 19[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``12 You can write a function as a one-liner (Part 1).`` () =[m
+[31m-        (fun monday -> fun tuesday -> monday * tuesday) 9 3 |> should equal 27[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``13 You can write a function as a one-liner (Part 2).`` () =[m
+[31m-        (fun monday tuesday -> monday + tuesday) 10 7 |> should equal 17[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``14 'Multiple-argument' functions are one-input, one-output in disguise`` () =[m
+[31m-      let i j k = j * k[m
+[31m-      let j = i 4[m
+[31m-      let k = j 12[m
+[31m-      k |> should equal 48[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``15 A function is executed when it is called, NOT when it is defined or referenced (Part 1).`` () =[m
+[31m-        let f a =[m
+[31m-            failwith "An exception will be thrown as soon as this is executed."[m
+[31m-            a + 2[m
+[31m-        f |> should be ofType<int -> int>[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``16 A function is executed when it is called, NOT when it is defined or referenced (Part 2).`` () =[m
+[31m-        (fun () ->[m
+[31m-            let f a =[m
+[31m-                failwith "An exception will be thrown as soon as this is executed."[m
+[31m-                a + 2[m
+[31m-            f 1232 |> should equal 1234[m
+[31m-        ) |> should throw typeof<System.Exception>[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``17 Two names can be bound to the same value`` () =[m
+[31m-        let f x = x + 2[m
+[31m-        let y = f[m
+[31m-        y 20 |> should equal 22[m
+[31m-[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``18 Shadowing and functions`` () =[m
+[31m-        let a = 25[m
+[31m-        let f () = a + 10[m
+[31m-        let a = 99[m
+[31m-        a |> should equal 99[m
+[31m-        f () |> should equal 35[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``19 Nesting functions`` () =[m
+[31m-        let hailstone x =[m
+[31m-            let triple x = x * 3[m
+[31m-            let addOne x = x + 1[m
+[31m-            addOne (triple x)[m
+[31m-        hailstone 5 |> should equal 16[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``20 Functions have types`` () =[m
+[31m-        let a x y = x + "cabbage" + y[m
+[31m-        let b r = 50.0 / r[m
+[31m-        a "eat " ", goat!"|> should be ofType<string>[m
+[31m-        b 5.0 |> should be ofType<float>[m
+[31m-[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``21 Passing a function as a parameter`` () =[m
+[31m-    (*[m
+[31m-        A function which accepts a function as input is called a "higher-order"[m
+[31m-        function.[m
+[31m-[m
+[31m-        If you think that passing a function as a parameter is a bit "weird",[m
+[31m-        then I'd challenge you to answer this question: why SHOULDN'T you[m
+[31m-        be able to pass a function as a parameter?[m
+[31m-        [m
+[31m-        If you can't come up with a reason, then perhaps the problem lies more[m
+[31m-        with your current views about how programming "should" be, and not[m
+[31m-        with the feature of higher-order functions :).[m
+[31m-    *)[m
+[31m-        let somefunc x y = x + y x[m
+[31m-        let square v = v * v[m
+[31m-        somefunc 3 square |> should equal 12[m
+[31m-        somefunc 3 ((*) 7) |> should equal 24[m
+[31m-        somefunc 10 ((+) 8) |> should equal 28[m
+[31m-        somefunc 5 (fun z -> z + 22) |> should equal 32[m
+[31m-[m
+[31m-   (*[m
+[31m-       Did you know that operators like +, -, =, >, and so on, are actually[m
+[31m-       functions in disguise?[m
+[31m-   *)[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``22 Operators are functions in disguise`` () =[m
+[31m-        (+) 5 8 |> should equal 13[m
+[31m-        (-) 3 5 |> should equal -2[m
+[31m-        (/) 12 4 |> should equal 3[m
+[31m-        (=) 93.1 93.12 |> should equal false[m
+[31m-        (<) "hey" "jude" |> should equal true[m
+[31m-        // ... and other operators: >, <=, >=, <>, %, ...[m
+[31m-[m
+[31m-(*[m
+[31m-    In a functional language, functions are used for almost everything.[m
+[31m-[m
+[31m-    In "mainstream" object-orientation (e.g. C# or Java), you would make[m
+[31m-    objects and methods and inheritance and all of that jazz to structure your[m
+[31m-    program's logic.  Every method must be in an object, and we create[m
+[31m-    objects and call methods to make things happen.[m
+[31m-[m
+[31m-    In functional programming, we do all of this with functions.  It is normal[m
+[31m-    to make very small functions, and then combine them in various ways to[m
+[31m-    achieve a goal.  There are operators in the language to make this easier,[m
+[31m-    and these operators (of course!) are merely functions themselves, just like[m
+[31m-    (+), (*), (-), and so on.[m
+[31m-*)[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``23 |>, the 'pipe' operator`` () =[m
+[31m-        let add5 a = a + 5[m
+[31m-        let double a = a * 2[m
+[31m-        3 |> add5 |> double |> should equal 16  // <-- start with three, add 5, then double. Readable, isn't it?[m
+[31m-        3 |> double |> add5 |> should equal 11[m
+[31m-        6 |> add5 |> add5 |> should equal 16[m
+[31m-        8 |> double |> double |> add5 |> should equal 37[m
+[31m-[m
+[31m-    (*[m
+[31m-        The pipe operator takes:[m
+[31m-        - an input 'a[m
+[31m-        - a function 'a -> 'b[m
+[31m-        ...and applies the function to the input.  It is defined as:[m
+[31m-[m
+[31m-            let (|>) x f = f x[m
+[31m-[m
+[31m-        We often use the pipe operator to make code more readable.[m
+[31m-    *)[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``24 The output type of one pipe must be the input type to the next`` () =[m
+[31m-        let a x = x * 2.5[m
+[31m-        let b x = x = 7.5[m
+[31m-        a |> should be ofType<float -> float>[m
+[31m-        b |> should be ofType<float -> bool>[m
+[31m-        3.0 |> a |> b |> should equal true[m
+[31m-[m
+[31m-    (*[m
+[31m-        The backwards-pipe operator takes:[m
+[31m-        - a function 'a -> 'b[m
+[31m-        - an input 'a[m
+[31m-        ...and applies the function to the input.  It is defined as:[m
+[31m-[m
+[31m-            let (<|) f x = f x[m
+[31m-[m
+[31m-        Due to the precedence of operators in the language, it's[m
+[31m-        sometimes slightly more readable to use <| instead of brackets.[m
+[31m-        But this is often a matter of taste and aesthetics, and <| is not[m
+[31m-        used nearly as much as |> is.[m
+[31m-    *)[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``25 <|, the lesser-used (but still useful) backwards pipe`` () =[m
+[31m-        let a x =[m
+[31m-            x = 4[m
+[31m-        not (a 4) |> should equal false[m
+[31m-        (not <| a 4) |> should equal false // <-- put <| in one of the spaces to fill in[m
+[31m-[m
+[31m-    (*[m
+[31m-        The compose operator takes:[m
+[31m-        - a function 'a -> 'b[m
+[31m-        - a function 'b -> 'c[m
+[31m-        ...and returns a function 'a -> 'c .  In other words, it "joins" the first and second[m
+[31m-        functions to make a new function.  Composing functions is a very powerful[m
+[31m-        technique: you can think of it as snapping together Lego blocks to create[m
+[31m-        something new.  Functional programmers often make small functions that they[m
+[31m-        will compose into larger ones later on.[m
+[31m-[m
+[31m-        The compose operator can be defined as:[m
+[31m-[m
+[31m-        let (>>) a b = fun input -> b (a input)[m
+[31m-    *)[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``26 >>, the 'compose' operator`` () =[m
+[31m-        let add5 a = a + 5[m
+[31m-        let double a = a * 2[m
+[31m-        let i = add5 >> double // this means the same as: add5, then double[m
+[31m-        let j = double >> add5[m
+[31m-        let k = double >> double >> add5[m
+[31m-        let l = j >> i[m
+[31m-        i 3 |> should equal 16[m
+[31m-        j 3 |> should equal 11[m
+[31m-        k 3 |> should equal 17[m
+[31m-        l 3 |> should equal 32[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``27 <<, the 'backwards compose' operator`` () =[m
+[31m-        let add5 a = a + 5[m
+[31m-        let double a = a * 2[m
+[31m-        let i = add5 << double // this means the same as: double, then add5[m
+[31m-        let j = double << add5[m
+[31m-        let k = double << double << add5[m
+[31m-        let l = j << i[m
+[31m-        i 3 |> should equal 11[m
+[31m-        j 3 |> should equal 16[m
+[31m-        k 3 |> should equal 32[m
+[31m-        l 3 |> should equal 32[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``28 Unit is used when there is no return value for a function``() = [m
+[31m-        // sendData is a function which is invoked ONLY for its side-effects[m
+[31m-        // It might do something, and then it gives back a unit value.[m
+[31m-        let sendData data = ()[m
+[31m-        sendData "some data to send..." |> should equal null // ... don't overthink this one![m
+[31m-   [m
+[31m-    [<Test>][m
+[31m-    let ``29 Unit, as an input, conveys no data`` () = [m
+[31m-        let sayHello () = "hello"[m
+[31m-        sayHello |> should be ofType<unit -> string>[m
+[31m-        sayHello () |> should be ofType<string>[m
+[31m-        sayHello () |> should equal "hello"[m
+[31m-[m
+[31m-    (*[m
+[31m-    When we develop real systems, we often run into problems[m
+[31m-    around time and timing.  For example, consider how a web[m
+[31m-    browser might work.  It loads images and videos and text[m
+[31m-    and all sorts of things on a webpage.  But only a small[m
+[31m-    portion of that webpage is visible to a user at a time, and it[m
+[31m-    is wasteful (and affects performance!) to pull down an image[m
+[31m-    that might never be seen, or to do the work of decoding a[m
+[31m-    video which can't be seen by the user.  So, what do we do?[m
+[31m-[m
+[31m-    If you think carefully about it, you will realize that this is a[m
+[31m-    timing problem.  We don't know what the user will do, and[m
+[31m-    we don't know when (if ever!) a particular thing will be[m
+[31m-    required.  What we want is a way to *DEFER* work, so that[m
+[31m-    it is only done when it needs to be done.[m
+[31m-[m
+[31m-    We can use a ( unit->'a ) function to do this.  The function[m
+[31m-    contains the code that *would* be executed to achieve the goal,[m
+[31m-    but DOES NOT EXECUTE the code until it is called.  Remember[m
+[31m-    that DEFINING a function is not the same as CALLING a function![m
+[31m-    Then, if/when we need to, we can call the function to perform[m
+[31m-    the work only when it is necessary to do so.[m
+[31m-    *)[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``30 Unit is often used to defer code execution`` () =[m
+[31m-        let divideBy10 n () =[m
+[31m-            n / 10[m
+[31m-        let deferred = divideBy10 700[m
+[31m-        divideBy10 |> should be ofType<int -> unit -> int>[m
+[31m-        deferred |> should be ofType<unit -> int>[m
+[31m-        divideBy10 850 |> should be ofType<unit -> int>[m
+[31m-        deferred () |> should be ofType<int>[m
+[31m-        deferred () |> should equal 70[m
+[31m-        divideBy10 6300 () |> should equal 630[m
+[31m-[m
+[31m-    (*[m
+[31m-        Sometimes we want to do something purely for a side-effect[m
+[31m-        that it has.  For example, we may want to read a line from a[m
+[31m-        file just so that we can get to the next line.  In these cases,[m
+[31m-        we use the `ignore` function to throw away a return value.[m
+[31m-    *)[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``31 The 'ignore' function is used to map anything to 'unit'`` () =[m
+[31m-        // this next function has a side-effect: it prints something out.[m
+[31m-        let log x =[m
+[31m-            // print out the value of x[m
+[31m-            printfn "%A" x[m
+[31m-            x // return x[m
+[31m-        log 5 |> should equal 5[m
+[31m-        ignore (log "blorp") |> should equal ()[m
+[31m-        log 19.66 |> ignore |> should equal ()[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``32 Partially specifying arguments (Part 1).`` () =[m
+[31m-        // this shows you how you can partially specify particular arguments to[m
+[31m-        // reuse functionality.  This technique is exceptionally flexible and often[m
+[31m-        // seen in functional code, so you should try to understand it.[m
+[31m-        let f animal noise = animal + " says " + noise[m
+[31m-        let kittehs = f "cat"[m
+[31m-        kittehs "nyan" |> should equal "cat says nyan"[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``33 Partially specifying arguments (Part 2).`` () =[m
+[31m-        // as above, but what do you do when the arguments aren't in the order[m
+[31m-        // that you want them to be in?[m
+[31m-        let f animal noise = animal + " says " + noise[m
+[31m-        let howl k = f k "slash/crunch/snap" // <- multiple words on this line.  You MUST use `f`.[m
+[31m-        howl "dire wolf" |> should equal "dire wolf says slash/crunch/snap"[m
+[31m-        howl "direr wolf" |> should equal "direr wolf says slash/crunch/snap"[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``34 Partially specifying arguments (Part 3).`` () =[m
+[31m-        // Extending a bit more, what do you do when you want to apply a function,[m
+[31m-        // but modify the result before you give it back?[m
+[31m-        let f animal noise = animal + " says " + noise[m
+[31m-        let cows i = f "cow" i + ", de gozaru" // <-- multiple words on this line, or you may want to make this a multi-line thing.  You MUST use `f`.[m
+[31m-        cows "moo" |> should equal "cow says moo, de gozaru"[m
+[31m-        cows "MOOooOO" |> should equal "cow says MOOooOO, de gozaru"[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``35 Getting closure`` () =[m
+[31m-        let calculate initial final = // note the number of inputs.[m
+[31m-            let middle = (final - initial) / 2[m
+[31m-            fun t -> t-middle, t+middle[m
+[31m-        // note the number of inputs provided below.  Do you see why I can do this?[m
+[31m-        calculate 10 20 5 |> should equal (0, 10)[m
+[31m-        calculate 0 600 250 |> should equal (-50, 550)[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``36 Using a value defined in an inner scope`` () =[m
+[31m-        // this is very similar to the previous test.[m
+[31m-        let g t =[m
+[31m-            let result = ((t%2)+1) * 10[m
+[31m-            fun x -> result - x[m
+[31m-        g 5 8 |> should equal 12[m
+[31m-        g 8 5 |> should equal 5[m
+[31m-        // PS. I hope this one brought you some closure.[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``37 An operator is just a function in disguise`` () =[m
+[31m-        let apply f x =[m
+[31m-            f x 3[m
+[31m-        apply (/) 27 |> should equal 9[m
+[31m-        apply (*) 4 |> should equal 12[m
+[31m-        apply (+) 13 |> should equal 16[m
+[31m-        apply (-) 8 |> should equal 5[m
+[1mdiff --git a/FSharpKoans/AboutIteration.fs b/FSharpKoans/AboutIteration.fs[m
+[1mdeleted file mode 100644[m
+[1mindex af673f7..0000000[m
+[1m--- a/FSharpKoans/AboutIteration.fs[m
+[1m+++ /dev/null[m
+[36m@@ -1,33 +0,0 @@[m
+[31m-﻿namespace FSharpKoans[m
+[31m-open NUnit.Framework[m
+[31m-[m
+[31m-module ``05: To iterate is human; to recurse, divine`` =[m
+[31m-    (*[m
+[31m-        The `rec` keyword exposes the function identifier for use inside the function.[m
+[31m-        And that's literally all that it does - it has no other purpose whatsoever.[m
+[31m-    *)[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``01 `rec` exposes the name of the function for use inside the function`` () =[m
+[31m-        let rec converge d c n =[m
+[31m-            match d = c with[m
+[31m-            | false ->[m
+[31m-                match d < c with[m
+[31m-                | true -> converge (d+10) c (n+1)[m
+[31m-                | false -> converge (d - 1) c (n+1)[m
+[31m-            | true -> n[m
+[31m-        converge 3 10 0 |> should equal 4[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``02 Tail recursion stops a stack overflow from occurring`` () =[m
+[31m-        // CHANGE the recursive function to be tail recursive.[m
+[31m-        let myfun n =[m
+[31m-            let sq = n*n[m
+[31m-            let v = sq*sq*sq*sq[m
+[31m-            let rec inner count acc =[m
+[31m-                match count = v with[m
+[31m-                | true -> 0 + acc[m
+[31m-                | false -> inner (count + 1) (count + acc)[m
+[31m-            inner sq 0[m
+[31m-[m
+[31m-        myfun 12 |> should equal 1932482504[m
+[1mdiff --git a/FSharpKoans/AboutListOperations.fs b/FSharpKoans/AboutListOperations.fs[m
+[1mdeleted file mode 100644[m
+[1mindex 5de37ce..0000000[m
+[1m--- a/FSharpKoans/AboutListOperations.fs[m
+[1m+++ /dev/null[m
+[36m@@ -1,325 +0,0 @@[m
+[31m-﻿namespace FSharpKoans[m
+[31m-open NUnit.Framework[m
+[31m-[m
+[31m-(*[m
+[31m-Suggestion: before you do the next few files, read through and[m
+[31m-understand this function:[m
+[31m-[m
+[31m-let f xs =[m
+[31m-   let rec innerF xs out =[m
+[31m-      match xs with[m
+[31m-      | [] -> out[m
+[31m-      | _::rest -> innerF rest (1::out)[m
+[31m-   innerF xs [][m
+[31m-[m
+[31m-This is one of the idioms that you'll see (and use) again and again.[m
+[31m-[m
+[31m-HINT: If you can't figure out what it does after reading through it and thinking about[m
+[31m-it for a while, select it and push it down to the F# Interactive prompt using Alt+Enter.[m
+[31m-Run it with some sample input, and see what it produces.[m
+[31m-*)[m
+[31m-[m
+[31m-module ``12: List operations are so easy, you could make them yourself!`` =[m
+[31m-[m
+[31m-    (*[m
+[31m-        Once you've learned about the Easy Way of doing something,[m
+[31m-        go ahead and use it in subsequent tests.[m
+[31m-    *)[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``01 Finding the length of a list, the hard way`` () =[m
+[31m-        let length (xs : 'a list) : int =[m
+[31m-            __ // write a function to find the length of a list[m
+[31m-        length [9;8;7] |> should equal 3[m
+[31m-        length [] |> should equal 0[m
+[31m-        length ["Le Comte de Monte-Cristo"] |> should equal 1[m
+[31m-        length [9;3;4;1;6;5;4] |> should equal 7[m
+[31m-[m
+[31m-    // Hint: https://msdn.microsoft.com/en-us/library/ee340354.aspx[m
+[31m-    [<Test>][m
+[31m-    let ``02 Finding the length of a list, the easy way`` () =[m
+[31m-        __ [9;8;5;8;45] |> should equal 5[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``03 Reversing a list, the hard way`` () =[m
+[31m-        let rev (xs : 'a list) : 'a list =[m
+[31m-            __ // write a function to reverse a list here.[m
+[31m-        rev [9;8;7] |> should equal [7;8;9][m
+[31m-        rev [] |> should equal [][m
+[31m-        rev [0] |> should equal [0][m
+[31m-        rev [9;3;4;1;6;5;4] |> should equal [4;5;6;1;4;3;9][m
+[31m-[m
+[31m-    // Hint: https://msdn.microsoft.com/en-us/library/ee340277.aspx[m
+[31m-    [<Test>][m
+[31m-    let ``04 Reversing a list, the easy way`` () =[m
+[31m-        __ [9;8;7] |> should equal [7;8;9][m
+[31m-        __ [] |> should equal [][m
+[31m-        __ [0] |> should equal [0][m
+[31m-        __ [9;8;5;8;45] |> should equal [45;8;5;8;9][m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``05 Fixed-function mapping, the hard way (part 1).`` () =[m
+[31m-        let map (xs : int list) : int list =[m
+[31m-            __ // write a function which adds 1 to each element[m
+[31m-        map [1; 2; 3; 4] |> should equal [2; 3; 4; 5][m
+[31m-        map [9; 8; 7; 6] |> should equal [10; 9; 8; 7][m
+[31m-        map [15; 2; 7] |> should equal [16; 3; 8][m
+[31m-        map [215] |> should equal [216][m
+[31m-        map [] |> should equal [][m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``06 Fixed-function mapping, the hard way (part 2).`` () =[m
+[31m-        let map (xs : int list) : int list =[m
+[31m-            __ // write a function which doubles each element[m
+[31m-        map [1; 2; 3; 4] |> should equal [2; 4; 6; 8][m
+[31m-        map [9; 8; 7; 6] |> should equal [18; 16; 14; 12][m
+[31m-        map [15; 2; 7] |> should equal [30; 4; 14][m
+[31m-        map [215] |> should equal [430][m
+[31m-        map [] |> should equal [][m
+[31m-[m
+[31m-   (*[m
+[31m-      Well, that was repetitive!  The only thing that really changed[m
+[31m-      between the functions was a single line.  How boring.[m
+[31m-[m
+[31m-      Perhaps we could reduce the boilerplace if we just specified[m
+[31m-      the transforming function, and left the rest of the structure[m
+[31m-      intact?[m
+[31m-   *)[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``07 Specified-function mapping, the hard way`` () =[m
+[31m-        let map (f : 'a -> 'b) (xs : 'a list) : 'b list =[m
+[31m-            __ // write a map which applies f to each element[m
+[31m-        map (fun x -> x+1) [9;8;7] |> should equal [10;9;8][m
+[31m-        map ((*) 2) [9;8;7] |> should equal [18;16;14][m
+[31m-        map (fun x -> sprintf "%.2f wut?" x)  [9.3; 1.22] |> should equal ["9.30 wut?"; "1.22 wut?"][m
+[31m-[m
+[31m-    // Hint: https://msdn.microsoft.com/en-us/library/ee370378.aspx[m
+[31m-    [<Test>][m
+[31m-    let ``08 Specified-function mapping, the easy way`` () =[m
+[31m-        __ (fun x -> x+1) [9;8;7] |> should equal [10;9;8][m
+[31m-        __ ((*) 2) [9;8;7] |> should equal [18;16;14][m
+[31m-        __ (fun x -> sprintf "%.2f wut?" x)  [9.3; 1.22] |> should equal ["9.30 wut?"; "1.22 wut?"][m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``09 Specified-function filtering, the hard way`` () =[m
+[31m-        let filter (f : 'a -> bool) (xs : 'a list) : 'a list =[m
+[31m-            __ // write a function which filters based on the specified criteria[m
+[31m-        filter (fun x -> x > 19) [9; 5; 23; 66; 4] |> should equal [23; 66][m
+[31m-        filter (fun x -> String.length x = 4) ["moo"; "woof"; "yip"; "nyan"; "meow"][m
+[31m-        |> should equal ["woof"; "nyan"; "meow"][m
+[31m-        filter (fun (a,b) -> a*b >= 14) [9,3; 4,2; 4,5] |> should equal [9,3; 4,5][m
+[31m-[m
+[31m-    // Hint: https://msdn.microsoft.com/en-us/library/ee370294.aspx[m
+[31m-    [<Test>][m
+[31m-    let ``10 Specified-function filtering, the easy way`` () =[m
+[31m-        __ (fun x -> x > 19) [9; 5; 23; 66; 4] |> should equal [23; 66][m
+[31m-        __ (fun x -> String.length x = 4) ["moo"; "woof"; "yip"; "nyan"; "meow"][m
+[31m-        |> should equal ["woof"; "nyan"; "meow"][m
+[31m-        __ (fun (a,b) -> a*b >= 14) [9,3; 4,2; 4,5] |> should equal [9,3; 4,5][m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``11 Fixed-function filtering, the hard way`` () =[m
+[31m-        let filter (xs : int list) : int list =[m
+[31m-            __ // write a function to filter for odd elements only.[m
+[31m-        filter [1; 2; 3; 4] |> should equal [1; 3][m
+[31m-        filter [10; 9; 8; 7] |> should equal [9; 7][m
+[31m-        filter [15; 2; 7] |> should equal [15; 7][m
+[31m-        filter [215] |> should equal [215][m
+[31m-        filter [216] |> should equal [][m
+[31m-        filter [2;4;6;8;10] |> should equal [][m
+[31m-        filter [1;3;5;7;9] |> should equal [1;3;5;7;9][m
+[31m-        filter [] |> should equal [][m
+[31m-[m
+[31m-   // once again, this would be a heck of a lot more flexible if we[m
+[31m-   // were able to filter using different criteria![m
+[31m-   //[m
+[31m-   // ... you can make a function to do that, right? ^_^.[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``12 Specified-function filtering, the hard way`` () =[m
+[31m-        let filter (f : 'a -> bool) (xs : 'a list) : 'a list =[m
+[31m-            __ // write a function which filters based on the specified criteria[m
+[31m-        filter (fun x -> x > 19) [9; 5; 23; 66; 4] |> should equal [23; 66][m
+[31m-        filter (fun x -> String.length x = 4) ["moo"; "woof"; "yip"; "nyan"; "meow"][m
+[31m-        |> should equal ["woof"; "nyan"; "meow"][m
+[31m-        filter (fun (a,b) -> a*b >= 14) [9,3; 4,2; 4,5] |> should equal [9,3; 4,5][m
+[31m-[m
+[31m-    // Hint: https://msdn.microsoft.com/en-us/library/ee370294.aspx[m
+[31m-    [<Test>][m
+[31m-    let ``13 Specified-function filtering, the easy way`` () =[m
+[31m-        __ (fun x -> x > 19) [9; 5; 23; 66; 4] |> should equal [23; 66][m
+[31m-        __ (fun x -> String.length x = 4) ["moo"; "woof"; "yip"; "nyan"; "meow"][m
+[31m-        |> should equal ["woof"; "nyan"; "meow"][m
+[31m-        __ (fun (a,b) -> a*b >= 14) [9,3; 4,2; 4,5] |> should equal [9,3; 4,5][m
+[31m-[m
+[31m-(*[m
+[31m-A 'fold' starts from a specified state, and generates more states depending[m
+[31m-on the elements of the list.  The last state that is generated is the one which[m
+[31m-is returned.[m
+[31m-[m
+[31m-Sounds complex?  Nah, it's not really ;).  Let's go through an example:[m
+[31m-you have a list of numbers, and you want to find their sum.  Your list is[m
+[31m-[9;4;2;7;5].  Obviously, the sum is 9+4+2+7+5 = 27.  But let's work it[m
+[31m-out using a fold operation.[m
+[31m-[m
+[31m-We'll start from the specified state 0.  Every time that we look at a number,[m
+[31m-we'll add it to the state, thus generating the next state.  At the end, we'll[m
+[31m-take the last-generated state.[m
+[31m-[m
+[31m-State=0, Element=N/A, NextState=N/A   <- this is our initial state.  Then,[m
+[31m-State=0, Element=9, NextState=0+9=9[m
+[31m-State=9, Element=4, NextState=9+4=13[m
+[31m-State=13, Element=2, NextState=13+2=15[m
+[31m-State=15, Element=7, NextState=15+7=22[m
+[31m-State=22, Element=5, NextState=22+5=27[m
+[31m-... and then we run out of elements.[m
+[31m-[m
+[31m-The very last state that was generated was 27.  So that's what we return.[m
+[31m-[m
+[31m-When you get used to thinking in the 'pattern' of folding, you'll start to[m
+[31m-see them everywhere.  Whenever you've got a list of things, and you're[m
+[31m-reducing them to one value (whether summing, averaging, concatenating,[m
+[31m-or something else), it's likely that you'll be able to use a fold.[m
+[31m-*)[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``14 A fold which sums a list`` () =[m
+[31m-        let fold initialState xs =[m
+[31m-            __ // write a function to do what's described above[m
+[31m-        fold 0 [1; 2; 3; 4] |> should equal 10[m
+[31m-        fold 100 [2;4;6;8] |> should equal 120[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``15 A fold which multiplies a list`` () =[m
+[31m-        let fold initialState xs =[m
+[31m-            __ // write a function to multiply the elements of a list[m
+[31m-        fold __ [99] |> should equal 99[m
+[31m-        fold 2 [__] |> should equal 22[m
+[31m-        fold __ [1;3;5;7] |> should equal 105[m
+[31m-        fold __ [2;5;3] |> should equal 0[m
+[31m-[m
+[31m-    // you probably know the drill by now.  It'd be good to have[m
+[31m-    // a function which does the state-generation stuff, wouldn't[m
+[31m-    // it?[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``16 Folding, the hard way`` () =[m
+[31m-        let fold (f : 'a -> 'b -> 'a) (initialState : 'a) (xs : 'b list) : 'a =[m
+[31m-            __  // write a function to do a fold.[m
+[31m-        fold (+) 0 [1;2;3;4] |> should equal 10[m
+[31m-        fold (*) 2 [1;2;3;4] |> should equal 48[m
+[31m-        fold (fun state item -> sprintf "%s %s" state item) "items:" ["dog"; "cat"; "bat"; "rat"][m
+[31m-        |> should equal "items: dog cat bat rat"[m
+[31m-        fold (fun state item -> state + float item + 0.5) 0.8 [1;3;5;7] |> should equal 18.8[m
+[31m-[m
+[31m-    // Hint: https://msdn.microsoft.com/en-us/library/ee353894.aspx[m
+[31m-    [<Test>][m
+[31m-    let ``17 Folding, the easy way`` () =[m
+[31m-        __ (+) 0 [1;2;3;4] |> should equal 10[m
+[31m-        __ (*) 2 [1;2;3;4] |> should equal 48[m
+[31m-        __ (fun state item -> sprintf "%s %s" state item) "items:" ["dog"; "cat"; "bat"; "rat"][m
+[31m-        |> should equal "items: dog cat bat rat"[m
+[31m-        __ (fun state item -> state + float item + 0.5) 0.8 [1;3;5;7] |> should equal 18.8[m
+[31m-[m
+[31m-    // List.exists[m
+[31m-    [<Test>][m
+[31m-    let ``18 exists: finding whether any matching item exists`` () =[m
+[31m-        let exists (f : 'a -> bool) (xs : 'a list) : bool =[m
+[31m-            __ // Does this: https://msdn.microsoft.com/en-us/library/ee370309.aspx[m
+[31m-        exists ((=) 4) [7;6;5;4;5] |> should equal true[m
+[31m-        exists (fun x -> String.length x < 4) ["true"; "false"] |> should equal false[m
+[31m-        exists (fun _ -> true) [] |> should equal false[m
+[31m-[m
+[31m-    // List.partition[m
+[31m-    [<Test>][m
+[31m-    let ``19 partition: splitting a list based on a criterion`` () =[m
+[31m-        let partition (f : 'a -> bool) (xs : 'a list) : ('a list) * ('a list) =[m
+[31m-            __ // Does this: https://msdn.microsoft.com/en-us/library/ee353782.aspx[m
+[31m-        let a, b = partition (fun x -> x%2=0) [1;2;3;4;5;6;7;8;9;10][m
+[31m-        a |> should equal [2;4;6;8;10][m
+[31m-        b |> should equal [1;3;5;7;9][m
+[31m-        let c, d = partition (fun x -> String.length x < 4) ["woof"; "yip"; "moo"; "nyan"; "arf"][m
+[31m-        c |> should equal ["yip"; "moo"; "arf"][m
+[31m-        d |> should equal ["woof"; "nyan"][m
+[31m-        let e, f = partition (fun _ -> false) [9.2; 7.3; 11.8][m
+[31m-        e |> should equal [][m
+[31m-        f |> should equal [9.2; 7.3; 11.8][m
+[31m-[m
+[31m-    // List.init[m
+[31m-    [<Test>][m
+[31m-    let ``20 init: creating a list based on a size and a function`` () =[m
+[31m-        let init (n : int) (f : int -> 'a) : 'a list =[m
+[31m-            __ // Does this: https://msdn.microsoft.com/en-us/library/ee370497.aspx[m
+[31m-        init 10 (fun x -> x*2) |> should equal [0;2;4;6;8;10;12;14;16;18][m
+[31m-        init 4 (sprintf "(%d)") |> should equal ["(0)";"(1)";"(2)";"(3)"][m
+[31m-[m
+[31m-    // List.tryFind[m
+[31m-    [<Test>][m
+[31m-    let ``21 tryFind: find the first matching element, if any`` () =[m
+[31m-        let tryFind (p : 'a -> bool) (xs : 'a list) : 'a option =[m
+[31m-            __ // Does this: https://msdn.microsoft.com/en-us/library/ee353506.aspx[m
+[31m-        tryFind (fun x -> x<=45) [100;85;25;55;6] |> should equal (Some 25)[m
+[31m-        tryFind (fun x -> x>450) [100;85;25;55;6] |> should equal None[m
+[31m-[m
+[31m-    // List.tryPick[m
+[31m-    [<Test>][m
+[31m-    let ``22 tryPick: find the first matching element, if any, and transform it`` () =[m
+[31m-        let tryPick (p : 'a -> 'b option) (xs : 'a list) : 'b option =[m
+[31m-            __ // Does this: https://msdn.microsoft.com/en-us/library/ee353814.aspx[m
+[31m-        let f x =[m
+[31m-            match x<=45 with[m
+[31m-            | true -> Some(x*2)[m
+[31m-            | _ -> None[m
+[31m-        tryPick f [100;85;25;55;6] |> should equal (Some 50)[m
+[31m-        let g x =[m
+[31m-            match String.length x with[m
+[31m-            | 1 | 3 | 5 | 7 | 9 -> Some <| String.concat "-" [x;x;x][m
+[31m-            | 0 | 2 | 4 | 6 | 8 -> Some "Yo!"[m
+[31m-            | _ -> None[m
+[31m-        tryPick g ["billabong!!"; "in the house!"; "yolo!"; "wut!"] |> should equal (Some "yolo!-yolo!-yolo!")[m
+[31m-        tryPick g ["qwerty"; "khazad-dum"] |> should equal (Some "Yo!")[m
+[31m-        tryPick g ["And the winner is..."] |> should equal None[m
+[31m-[m
+[31m-    (*[m
+[31m-        There are also the functions List.pick and List.find, which do what[m
+[31m-        the .tryPick and .tryFind variants do -- but when .tryPick and .tryFind[m
+[31m-        would give back None, .pick and .find will throw an exception.  So[m
+[31m-        you should only use them when you're absolutely sure that they[m
+[31m-        can't fail![m
+[31m-    *)[m
+[31m-[m
+[31m-    // List.choose[m
+[31m-    [<Test>][m
+[31m-    let ``23 choose: find all matching elements, and transform them`` () =[m
+[31m-        // Think about this: why does the signature of `choose` have to be like this?[m
+[31m-        // - why can't it take an 'a->'b, instead of an 'a->'b option ?[m
+[31m-        // - why does it return a 'b list, and not a 'b list option ?[m
+[31m-        let choose (p : 'a -> 'b option) (xs : 'a list) : 'b list =[m
+[31m-            __ // Does this: https://msdn.microsoft.com/en-us/library/ee353456.aspx[m
+[31m-        let f x =[m
+[31m-            match x<=45 with[m
+[31m-            | true -> Some(x*2)[m
+[31m-            | _ -> None[m
+[31m-        choose f [100;85;25;55;6] |> should equal [50;12][m
+[31m-        let g x =[m
+[31m-            match String.length x with[m
+[31m-            | 1 | 3 | 5 | 7 | 9 -> Some <| String.concat "-" [x;x;x][m
+[31m-            | 0 | 2 | 4 | 6 | 8 -> Some "Yo!"[m
+[31m-            | _ -> None[m
+[31m-        choose g ["billabong!!"; "in the house!"; "yolo!"; "wut!"] |> should equal ["yolo!-yolo!-yolo!"; "Yo!"][m
+[31m-        choose g ["qwerty"; "khazad-dum"] |> should equal ["Yo!"][m
+[31m-        choose g ["And the winner is..."] |> should equal [][m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``24 mapi: like map, but passes along an item index as well`` () =[m
+[31m-        let mapi (f : int -> 'a -> 'b) (xs : 'a list) : 'b list =[m
+[31m-            __ // Does this: https://msdn.microsoft.com/en-us/library/ee353425.aspx[m
+[31m-        mapi (fun i x -> -i, x+1) [9;8;7;6] |> should equal [0,10; -1,9; -2,8; -3,7][m
+[31m-        let hailstone i t =[m
+[31m-            match i%2 with[m
+[31m-            | 0 -> t/2[m
+[31m-            | _ -> t*3+1[m
+[31m-        mapi hailstone [9;8;7;6] |> should equal [4;25;3;19][m
+[31m-        mapi (fun i x -> sprintf "%03d. %s" (i+1) x)  ["2B"; "R02B"; "R2D2?"][m
+[31m-        |> should equal ["001. 2B"; "002. R02B"; "003. R2D2?"][m
+[1mdiff --git a/FSharpKoans/AboutLists.fs b/FSharpKoans/AboutLists.fs[m
+[1mdeleted file mode 100755[m
+[1mindex 4cf0bae..0000000[m
+[1m--- a/FSharpKoans/AboutLists.fs[m
+[1m+++ /dev/null[m
+[36m@@ -1,110 +0,0 @@[m
+[31m-﻿namespace FSharpKoans[m
+[31m-[m
+[31m-open NUnit.Framework[m
+[31m-[m
+[31m-(*[m
+[31m-Lists are immutable, ordered, finite sequences of a single type.[m
+[31m-*)[m
+[31m-[m
+[31m-module ``10: I Have Here In My Hand A List`` = [m
+[31m-    [<Test>][m
+[31m-    let ``01 Creating a list (Syntax 1).`` () = [m
+[31m-        let myList = [ __; __; __; __ ][m
+[31m-        myList |> should equal [ "apple"; "grape"; "pear"; "biscuit" ][m
+[31m-   [m
+[31m-    [<Test>][m
+[31m-    let ``02 Creating a list (Syntax 2).`` () =[m
+[31m-        let myList = __::__::__::__::[][m
+[31m-        let myOtherList = __::__::__::[ __ ][m
+[31m-        let myNextList = __::__::__ // you may use [ and ] symbols on this line.[m
+[31m-        let myLastList = __::__::__ // DO NOT use [ or ] symbols on this line![m
+[31m-        myList |> should equal [ "apple"; "grape"; "pear"; "biscuit" ][m
+[31m-        myOtherList |> should equal [ "orange"; "lemon"; "princess"; "queen" ][m
+[31m-        myNextList |> should equal ["lily"; "sunflower"; "daisy"; "carrot"][m
+[31m-        myLastList |> should equal [ "naartjie"; "raisin"; "apple"; "grape"; "pear"; "biscuit" ][m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``03 Creating a list (via concatenation).`` () =[m
+[31m-        let a = [902; 10][m
+[31m-        let b = [3; 13; 37][m
+[31m-        let result = __ @ __[m
+[31m-        result |> should equal [902; 10; 3; 13; 37][m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``04 The : : operator (called "cons") does not modify an existing list`` () = [m
+[31m-        let first = [ "grape"; "peach" ][m
+[31m-        let second = "pear" :: first[m
+[31m-        let third = "apple" :: second[m
+[31m-        third |> should equal __[m
+[31m-        second |> should equal __[m
+[31m-        first |> should equal __[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``05 Pattern-matching a list (Part 1).`` () =[m
+[31m-        let fruits = ["apple"; "peach"; "orange"; "watermelon"; "pineapple"; "tomato"][m
+[31m-        let a::_ = fruits[m
+[31m-        a |> should equal __[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``06 Pattern-matching a list (Part 2).`` () =[m
+[31m-        let fruits = ["apple"; "peach"; "orange"; "watermelon"; "pineapple"; "tomato"][m
+[31m-        let b::c::_ = fruits[m
+[31m-        b |> should equal __[m
+[31m-        c |> should equal __[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``07 Pattern-matching a list (Part 3).`` () =[m
+[31m-        let fruits = ["apple"; "peach"; "orange"; "watermelon"; "pineapple"; "tomato"][m
+[31m-        let _::d::e = fruits[m
+[31m-        d |> should equal __[m
+[31m-        e |> should equal __[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``08 Pattern-matching a list (Part 4).`` () =[m
+[31m-        let fruits = ["apple"; "peach"; "orange"; "watermelon"; "pineapple"; "tomato"][m
+[31m-        let f::_::_::g::_ = fruits[m
+[31m-        f |> should equal __[m
+[31m-        g |> should equal __[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``09 Pattern-matching a list (Part 5).`` () =[m
+[31m-        let fruits = ["apple"; "peach"; "orange"; "watermelon"; "pineapple"; "tomato"][m
+[31m-        let _::_::_::h = fruits[m
+[31m-        h |> should equal __[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``10 Pattern-matching a list (Part 6).`` () =[m
+[31m-        let fruits = ["apple"; "peach"; "orange"; "watermelon"; "pineapple"; "tomato"][m
+[31m-        let [i;j;k;l;m;n] = fruits[m
+[31m-        i |> should equal __[m
+[31m-        j |> should equal __[m
+[31m-        k |> should equal __[m
+[31m-        l |> should equal __[m
+[31m-        m |> should equal __[m
+[31m-        n |> should equal __[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``11 Pattern-matching a list (Part 7).`` () =[m
+[31m-        let fruits = ["apple"; "peach"; "orange"; "watermelon"; "pineapple"; "tomato"][m
+[31m-        let _::o::_::[p;q;r] = fruits[m
+[31m-        o |> should equal __[m
+[31m-        p |> should equal __[m
+[31m-        q |> should equal __[m
+[31m-        r |> should equal __[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``12 Pattern-matching a list (Part 8).`` () =[m
+[31m-        let fruits = ["apple"; "peach"; "orange"; "watermelon"; "pineapple"; "tomato"][m
+[31m-        let [_;s;_;_;t;_] = fruits[m
+[31m-        s |> should equal __[m
+[31m-        t |> should equal __[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``13 Pattern-matching a list (Part 9).`` () =[m
+[31m-        let fruits = ["apple"; "peach"; "orange"; "watermelon"; "pineapple"; "tomato"][m
+[31m-        let k =[m
+[31m-            match fruits with[m
+[31m-            | [a;b;c;d;e] -> "prune"[m
+[31m-            | _::t::_::u::_ -> t + u[m
+[31m-            | _ -> "fig"[m
+[31m-        k |> should equal __[m
+\ No newline at end of file[m
+[1mdiff --git a/FSharpKoans/AboutMatching.fs b/FSharpKoans/AboutMatching.fs[m
+[1mdeleted file mode 100644[m
+[1mindex a966950..0000000[m
+[1m--- a/FSharpKoans/AboutMatching.fs[m
+[1m+++ /dev/null[m
+[36m@@ -1,110 +0,0 @@[m
+[31m-﻿namespace FSharpKoans[m
+[31m-open NUnit.Framework[m
+[31m-[m
+[31m-(*[m
+[31m-What's a match expression?  It's a construct that uses the power of patterns[m
+[31m-to conditionally execute code.  The first pattern (going from top to bottom) that[m
+[31m-matches causes the associated code to be executed.  All non-matching patterns,[m
+[31m-and any patterns after the first matching pattern, are ignored.  If no pattern[m
+[31m-matches, then you get a MatchFailureException at runtime and you turn into a[m
+[31m-Sad Panda.[m
+[31m-*)[m
+[31m-[m
+[31m-module ``04: Match expressions`` = [m
+[31m-    [<Test>][m
+[31m-    let ``01 Basic match expression`` () =[m
+[31m-        match 8000 with[m
+[31m-        | b -> "Insufficient power-level"[m
+[31m-        ()[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``02 Match expressions are expressions, not statements`` () =[m
+[31m-        let result =[m
+[31m-            match 9001 with[m
+[31m-            | a -> // <-- use an identifier pattern here![m
+[31m-                match a + 1000 with // <-- now use the identifier that you've bound[m
+[31m-                | 10001 -> "Hah! It's a palindromic number!"[m
+[31m-                | x -> "Some number."[m
+[31m-            | x -> "I should have matched the other expression."[m
+[31m-        result |> should equal "Hah! It's a palindromic number!"[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``03 Shadowing in match expressions`` () =[m
+[31m-        let x = 213[m
+[31m-        let y = 19[m
+[31m-        match x with[m
+[31m-        | 100 -> ()[m
+[31m-        | 19 -> ()[m
+[31m-        | y ->[m
+[31m-            y |> should equal 213[m
+[31m-            x |> should equal 213[m
+[31m-        y |> should equal 19[m
+[31m-        x |> should equal 213[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``04 Match order in match expressions`` () =[m
+[31m-        let x = 213[m
+[31m-        let y = 19[m
+[31m-        let z =[m
+[31m-            match x with[m
+[31m-            | 100 -> "Kite"[m
+[31m-            | 19 -> "Smite"[m
+[31m-            | 213 -> "Bite"[m
+[31m-            | y -> "Light"[m
+[31m-        let a = [m
+[31m-            match x with[m
+[31m-            | 100 -> "Kite"[m
+[31m-            | 19 -> "Smite"[m
+[31m-            | y -> "Trite"[m
+[31m-            | 213 -> "Light"[m
+[31m-        x |> should equal 213[m
+[31m-        y |> should equal 19[m
+[31m-        z |> should equal "Bite"[m
+[31m-        a |> should equal "Trite"[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``05 Using a mapping function`` () =[m
+[31m-        let mapper = function[m
+[31m-            | 3 -> "Joey" // write the cases for this function![m
+[31m-            | 8 -> "Bingo"[m
+[31m-            | a -> "Kelvin"[m
+[31m-        mapper 3 |> should equal "Joey"[m
+[31m-        mapper 8 |> should equal "Bingo"[m
+[31m-        mapper 11 |> should equal "Kelvin"[m
+[31m-        mapper 15 |> should equal "Kelvin"[m
+[31m-[m
+[31m-    (*[m
+[31m-        "The OR pattern is used when input data can match multiple patterns,[m
+[31m-        and you want to execute the same code as a result. The types of both[m
+[31m-        sides of the OR pattern must be compatible."[m
+[31m-    *)[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``06 Using an OR-pattern`` () =[m
+[31m-        let f input =[m
+[31m-            match input with[m
+[31m-            | "wut" | "lol" -> "yolo"[m
+[31m-            | "sunrise"[m
+[31m-            | "sunset" -> "transition"[m
+[31m-            | "Johnny Walker"[m
+[31m-            | "Bell's"[m
+[31m-            | "vodka" -> "failure"[m
+[31m-            | _ -> "lolwut"[m
+[31m-        f "lol" |> should equal "yolo"[m
+[31m-        f "wut" |> should equal "yolo"[m
+[31m-        f "Johnny Walker" |> should equal "failure"[m
+[31m-        f "Bell's" |> should equal "failure"[m
+[31m-        f "vodka" |> should equal "failure"[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``07 Identifiers bound on all branches of an OR-pattern must be the same`` () =[m
+[31m-        let f input =[m
+[31m-            match input with[m
+[31m-            | 0,0 -> "Both 0"[m
+[31m-            | 0,a | a,0 -> sprintf "One 0, one %d" a[m
+[31m-            | _ -> "No 0"[m
+[31m-        f (3,0) |> should equal "One 0, one 3"[m
+[31m-        f (0, 4) |> should equal "One 0, one 4"[m
+[31m-        f (9, 5) |> should equal "No 0"[m
+[31m-        f (0, 0) |> should equal "Both 0"[m
+[31m-[m
+[1mdiff --git a/FSharpKoans/AboutOptions.fs b/FSharpKoans/AboutOptions.fs[m
+[1mdeleted file mode 100644[m
+[1mindex 9e04255..0000000[m
+[1m--- a/FSharpKoans/AboutOptions.fs[m
+[1m+++ /dev/null[m
+[36m@@ -1,99 +0,0 @@[m
+[31m-﻿namespace FSharpKoans[m
+[31m-open NUnit.Framework[m
+[31m-open FsUnitTyped[m
+[31m-[m
+[31m-(*[m
+[31m-In F#, we tend to use options instead of exceptions for error-handling.[m
+[31m-[m
+[31m-The Option type is a built-in discriminated union that is defined as follows:[m
+[31m-[m
+[31m-type Option<'a> =[m
+[31m-| Some of 'a[m
+[31m-| None[m
+[31m-[m
+[31m-There are many built-in functions which return an Option.[m
+[31m-*)[m
+[31m-[m
+[31m-module ``09: Exploring types, options, and results`` =[m
+[31m-   (*[m
+[31m-      The next function takes in a name and extracts the surname.[m
+[31m-      But not all people have surnames![m
+[31m-         [m
+[31m-      So, sometimes there is no surname.  But that's completely[m
+[31m-      legitimate and understandable: it's not an error, so we[m
+[31m-      shouldn't be throwing an exception about it.  We should[m
+[31m-      reserve exceptions for actual errors.[m
+[31m-[m
+[31m-      Instead, if someone has a surname, then we return a Some[m
+[31m-      value.  Otherwise, we return a None value.  This allows us to[m
+[31m-         - Avoid using exceptions for no reason[m
+[31m-         - Express the domain that we're modelling more accurately[m
+[31m-         - Avoid returning null or "special" values which could be[m
+[31m-            misinterpreted later on and/or cause crashes.[m
+[31m-   *)[m
+[31m-    let getSurname (x:string) =[m
+[31m-        match x.Trim().LastIndexOf ' ' with[m
+[31m-        | -1 -> None[m
+[31m-        | n -> Some x.[n+1..][m
+[31m-    // why not just return -1 instead of None?  Well, -1 is a valid value[m
+[31m-    // in the problem domain.  A programmer must remember to check[m
+[31m-    // for the -1 value, and if this check is forgotten, then the program[m
+[31m-    // will have a bug.  None and Some are *disjoint* values which[m
+[31m-    // cannot be mistaken for each other, and they therefore make the[m
+[31m-    // success and failure cases explicit.[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``01 Type annotations for function types`` () =[m
+[31m-        let a (x:FILL_ME_IN) (y:FILL_ME_IN) = x + y[m
+[31m-        let b (x:FILL_ME_IN) (y:FILL_ME_IN) = x + y[m
+[31m-        a |> should be ofType<string -> string -> string>[m
+[31m-        b |> should be ofType<float -> float -> float>[m
+[31m-        a __ __ |> should equal "skipping"[m
+[31m-        b __ __ |> should equal 1.02[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``02 We can use a type annotation for a function's output`` () =[m
+[31m-        let k a b : FILL_ME_IN = a * b[m
+[31m-        k __ __ |> should equal 15.0 [m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``03 Basic Option example`` () =[m
+[31m-        getSurname "Taylor Swift" |> should equal __[m
+[31m-        getSurname "Eminem" |> should equal __[m
+[31m-[m
+[31m-    // the System.Int32.TryParse, System.Double.TryParse, etc functions return[m
+[31m-    // a tuple of bool * XYZ, where XYZ is the converted value.[m
+[31m-    [<Test>][m
+[31m-    let ``04 Parsing a string safely`` () =[m
+[31m-        let parse (s:string) =[m
+[31m-            match System.Int32.TryParse s with[m
+[31m-            | _ -> __ // <-- fill in the match cases[m
+[31m-        parse "25" |> should equal (Some 25)[m
+[31m-        parse "48" |> should equal (Some 48)[m
+[31m-        parse "wut" |> should equal None[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``05 Remapping Option values`` () =[m
+[31m-      let f n =[m
+[31m-         match getSurname n with[m
+[31m-         | _ -> __ // <-- write a bunch of good match cases[m
+[31m-      f "Anubis" |> should equal "[no surname]"[m
+[31m-      f "Niccolo Machiavelli" |> should equal "Machiavelli"[m
+[31m-      f "Mara Jade" |> should equal "Jade"[m
+[31m-      f "Khazad-Dum" |> should equal "[no surname]"[m
+[31m-[m
+[31m-    type ErrorReason =[m
+[31m-    | DivisionByZero | NegativeNumberSupplied[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``06 Using a Result to explain why things went wrong`` () =[m
+[31m-        let f n m =[m
+[31m-            match n<0.0, m=0.0 with[m
+[31m-            | true, _ -> Error NegativeNumberSupplied[m
+[31m-            | _, true -> __[m
+[31m-            | _ ->[m
+[31m-                // 'sqrt' is the square-root function[m
+[31m-                __ (sqrt n / m)[m
+[31m-        f -6.0 2.5 |> shouldEqual __[m
+[31m-        f 144.0 2.0 |> shouldEqual (Ok 6.0)[m
+[31m-        f 7.3 0.0 |> shouldEqual (Error DivisionByZero)[m
+[1mdiff --git a/FSharpKoans/AboutParametricPolymorphism.fs b/FSharpKoans/AboutParametricPolymorphism.fs[m
+[1mdeleted file mode 100644[m
+[1mindex d1f2327..0000000[m
+[1m--- a/FSharpKoans/AboutParametricPolymorphism.fs[m
+[1m+++ /dev/null[m
+[36m@@ -1,123 +0,0 @@[m
+[31m-﻿namespace FSharpKoans[m
+[31m-open NUnit.Framework[m
+[31m-[m
+[31m-(*[m
+[31m-    In functional programming, we often care about the "shape" of data, rather[m
+[31m-    than the data itself.  For example, if we are trying to find the length of a list,[m
+[31m-    it doesn't matter whether we have a list-of-strings or a list-of-floats or a[m
+[31m-    list-of-something-elses.  All that matters is that the data occurs in the shape[m
+[31m-    of a list.  Similarly, if we are given a tuple of two items and we only look at[m
+[31m-    the second item, then the type of the first item doesn't matter to us - it[m
+[31m-    could be anything, and the meaning of the program wouldn't change at all![m
+[31m-    [m
+[31m-    But what if we are given a tuple of 4 items, and our function outputs the[m
+[31m-    third item?  Now we have an interesting situation.  We hope to be able to[m
+[31m-    take in a tuple of ANY four types, but output a value that has the type of[m
+[31m-    the third item.  We can achieve this if we specify the type of the tuple[m
+[31m-    generically, as[m
+[31m-    [m
+[31m-        'a * 'b * 'c * 'd[m
+[31m-[m
+[31m-    This gives each component of the tuple a "fake" type (indicated by the ' symbol[m
+[31m-    before the type-name).  The function returns the third element, so we can[m
+[31m-    say that the type of the function is[m
+[31m-[m
+[31m-        'a * 'b * 'c * 'd -> 'c[m
+[31m-[m
+[31m-    ...and now we have a perfectly generic function, which can be use with any[m
+[31m-    4-tuple, and which is also completely safe to use.  And as a side-effect,[m
+[31m-    by looking at the function type, we can tell what the function does without[m
+[31m-    even looking at the code of the function!  The function cannot know what[m
+[31m-    'a, 'b, 'c, or 'd types are, and it cannot know how to construct them.  The[m
+[31m-    only way that it can get hold of a 'c value is by having it passed in.  Since[m
+[31m-    we know this to be true, it must be the case that the function is returning[m
+[31m-    the third item in the tuple [0]![m
+[31m-[m
+[31m-    The ability to look at the *shape* of data, and ignore unnecessarily-specific[m
+[31m-    types, is called "parametric polymorphism".  The non-specific (or "generic")[m
+[31m-    types are given as 'a, 'b, 'c, and so on.  We sometimes say that types which are[m
+[31m-    parametrically polymorphic are "generic types".[m
+[31m-[m
+[31m-    We may sometimes want to make our more structured types, like records[m
+[31m-    or discriminated unions, generic.[m
+[31m-*)[m
+[31m-[m
+[31m-module ``08: Parametric polymorphism`` =[m
+[31m-    (*[m
+[31m-        The next test demonstrates *type inference*.[m
+[31m-        [m
+[31m-        Not all functional languages are typed.  The first (and, arguably, the most powerful)[m
+[31m-        functional language was Lisp, and Lisp isn't strongly typed.  Typing is something that tends[m
+[31m-        to work very well with functional programming, but isn't something that is essential to[m
+[31m-        functional programming.  In the case of F#, typing often stops you from making "silly" errors.[m
+[31m-[m
+[31m-        F# uses type inference extensively.  Type inference means that it tries to work out[m
+[31m-        (or "infer") what type a particular name is by looking at code around it.  A readable, if[m
+[31m-        simplified, explanation of how this works can be found at:[m
+[31m-        http://fsharpforfunandprofit.com/posts/type-inference/[m
+[31m-    *)[m
+[31m-   [m
+[31m-    [<Test>][m
+[31m-    let ``01 The type of symbols in variable patterns is inferred`` () = [m
+[31m-        let x = 50[m
+[31m-        let y = "a string"[m
+[31m-        let z = -4.23[m
+[31m-        let a = false[m
+[31m-        let b = 't'[m
+[31m-        x |> should be ofType<int>[m
+[31m-        y |> should be ofType<FILL_ME_IN>[m
+[31m-        z |> should be ofType<FILL_ME_IN>[m
+[31m-        a |> should be ofType<FILL_ME_IN>[m
+[31m-        b |> should be ofType<FILL_ME_IN>[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``02 id: the simplest built-in generic function`` () =[m
+[31m-        // `id` is the identify function: it takes an input ... and gives it back immediately.[m
+[31m-        id 8 |> should equal __[m
+[31m-        id 7.6 |> should equal __[m
+[31m-        id "wut!" |> should equal __[m
+[31m-        // id can be surprisingly useful.  Remember it :).[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``03 Defining a generic function`` () =[m
+[31m-        let f x y = __[m
+[31m-        f 4 5 |> should equal (4, 5, 5)[m
+[31m-        f "k" 'p' |> should equal ("k", 'p', 'p')[m
+[31m-     [m
+[31m-    type GenericDiscriminatedUnionExample<'a,'b> =[m
+[31m-    | Frist[m
+[31m-    | Secnod of 'a * 'b[m
+[31m-    | Thrid of ('a -> ('b * 'a * int)) // <-- this shouldn't look odd.  Functions are first-class![m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``04 Creating a generic discriminated union (Part 1).`` () =[m
+[31m-        let a = Secnod (6.55, 7)[m
+[31m-        let b = Thrid (fun k -> true, k, 8)[m
+[31m-        // how do you write a generic type?[m
+[31m-        a |> should be ofType<FILL_ME_IN>[m
+[31m-        b |> should be ofType<FILL_ME_IN>[m
+[31m-[m
+[31m-    type MyDiscriminatedUnion =[m
+[31m-    | Furoth of FILL_ME_IN[m
+[31m-    | Fevi[m
+[31m-    | Sxi of FILL_ME_IN[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``05 Creating a generic discriminated union (Part 2).`` () =[m
+[31m-        // You need to edit the definition of MyDiscriminatedUnion first!  It's just above this test.[m
+[31m-        let a = __[m
+[31m-        let b = __[m
+[31m-        let c = __[m
+[31m-        let d = __[m
+[31m-        match a with[m
+[31m-        | Furoth n -> n |> should equal 7[m
+[31m-        | _ -> Assert.Fail ()[m
+[31m-        match b with[m
+[31m-        | Sxi x -> x |> should equal "bleh"[m
+[31m-        | _ -> Assert.Fail ()[m
+[31m-        match c with[m
+[31m-        | Furoth p -> p |> should equal 't'[m
+[31m-        | _ -> Assert.Fail ()[m
+[31m-        match d with[m
+[31m-        | Sxi y -> y |> should equal true[m
+[31m-        | _ -> Assert.Fail ()[m
+[1mdiff --git a/FSharpKoans/AboutRecords.fs b/FSharpKoans/AboutRecords.fs[m
+[1mindex 95c962f..547b159 100644[m
+[1m--- a/FSharpKoans/AboutRecords.fs[m
+[1m+++ b/FSharpKoans/AboutRecords.fs[m
+[36m@@ -25,7 +25,7 @@[m [mtype Book =[m
+ module ``13: On the Record`` =[m
+     [<Test>][m
+     let ``01 Creating records`` () =[m
+[31m-        let myRecord = __[m
+[32m+[m[32m        let myRecord = { Title = "Steelheart"; Author = "Brandon Sanderson"; Year = 2013}[m[41m[m
+         myRecord.Title |> should equal "Steelheart"[m
+         myRecord.Author |> should equal "Brandon Sanderson"[m
+         myRecord.Year |> should equal 2013[m
+[36m@@ -39,13 +39,13 @@[m [mmodule ``13: On the Record`` =[m
+                 Author="Michel Foucault"[m
+                 Year=1975[m
+             }[m
+[31m-        myRecord |> should be ofType<FILL_ME_IN>[m
+[31m-        myOtherRecord |> should be ofType<FILL_ME_IN>[m
+[32m+[m[32m        myRecord |> should be ofType<Pokemon>[m[41m[m
+[32m+[m[32m        myOtherRecord |> should be ofType<Book>[m[41m[m
+ [m
+     [<Test>][m
+     let ``03 Decomposing with a record pattern`` () =[m
+         let book = { Title="Dune"; Author="Frank Herbert"; Year=1965 }[m
+[31m-        let __ = book[m
+[32m+[m[32m        let { Title="Dune"; Author="Frank Herbert"; Year=1965 } = book[m[41m[m
+         __ |> should equal "Dune" // DO NOT use a . symbol in your answer[m
+         __ |> should equal 1965 // DO NOT use a . symbol in your answer[m
+ [m
+[36m@@ -56,13 +56,13 @@[m [mmodule ``13: On the Record`` =[m
+             | { Name="Pikachu"; Attack=a } -> a/2[m
+             | { Name="Raichu"; Attack=a } -> a/3[m
+             | { Attack=blah; Defense=lol } -> (blah + lol) / 2[m
+[31m-        result |> should equal __[m
+[32m+[m[32m        result |> should equal 30[m[41m[m
+ [m
+     [<Test>][m
+     let ``05 Accessing record members using dot syntax`` () =[m
+         let book = { Title="Tigana"; Author="Guy Gavriel Kay"; Year=1990 }[m
+[31m-        let k = __[m
+[31m-        let j = __[m
+[32m+[m[32m        let k = book.Title[m[41m[m
+[32m+[m[32m        let j = book.Year[m[41m[m
+         k |> should equal "Tigana"[m
+         j |> should equal 1990[m
+ [m
+[36m@@ -72,9 +72,9 @@[m [mmodule ``13: On the Record`` =[m
+         let second = { first with Title="A Clash of Kings"; Year=first.Year+2 } // <-- Pssst - see what I did here?[m
+         let third = { second with Title="A Storm of Swords"; Year=2000 }[m
+         let {Year=y0}, {Year=y1}, {Year=y2} = first, second, third[m
+[31m-        y0 |> should equal __[m
+[31m-        y1 |> should equal __[m
+[31m-        y2 |> should equal __[m
+[32m+[m[32m        y0 |> should equal 1996[m[41m[m
+[32m+[m[32m        y1 |> should equal 1998[m[41m[m
+[32m+[m[32m        y2 |> should equal 2000[m[41m[m
+ [m
+     (*[m
+         "The as-pattern is a pattern that has an as clause appended to it.[m
+[36m@@ -86,8 +86,8 @@[m [mmodule ``13: On the Record`` =[m
+ [m
+     [<Test>][m
+     let ``07 Binding composed and decomposed structures using 'as'`` () =[m
+[31m-      let f (___ as _____) =[m
+[31m-         { __ with Year = __ + 3 }[m
+[32m+[m[32m      let f (this as that) =[m[41m[m
+[32m+[m[32m         { that with Year = this.Year + 3 }[m[41m[m
+       f { Title="A Wizard of Earthsea"; Author="Ursula K. LeGuin"; Year=1968 }[m
+       |> should equal { Title="A Wizard of Earthsea"; Author = "Ursula K. LeGuin"; Year = 1971 }[m
+ [m
+[36m@@ -100,17 +100,17 @@[m [mmodule ``13: On the Record`` =[m
+     }[m
+     // we might create this with: { Something=5; Blah=8; Otherwise=9.3; What=77,"hi",0.88 }[m
+ [m
+[31m-    type MyRecord = {[m
+[31m-        Who : FILL_ME_IN // <-- should be generic[m
+[31m-        What : FILL_ME_IN // <-- should be generic, and a different type to Who[m
+[32m+[m[32m    type MyRecord<'c, 'd> = {[m[41m[m
+[32m+[m[32m        Who : 'c // <-- should be generic[m[41m[m
+[32m+[m[32m        What : 'd // <-- should be generic, and a different type to Who[m[41m[m
+         Where : string[m
+     }[m
+ [m
+     [<Test>][m
+     let ``08 Creating a generic record`` () =[m
+         // You need to edit the definition of MyRecord first!  It's just above this test.[m
+[31m-        let a = __[m
+[31m-        let b = __  [m
+[32m+[m[32m        let a = {Who = "The Doctor" ; What = 4.53 ; Where = "TTFN"}[m[41m[m
+[32m+[m[32m        let b = {Who = 'R'; What = false; Where = "tiffin"}[m[41m[m
+         a.Who |> should equal "The Doctor"[m
+         b.Who |> should equal 'R'[m
+         a.What |> should equal 4.53[m
+[1mdiff --git a/FSharpKoans/AboutStrings.fs b/FSharpKoans/AboutStrings.fs[m
+[1mdeleted file mode 100644[m
+[1mindex 4b40bfa..0000000[m
+[1m--- a/FSharpKoans/AboutStrings.fs[m
+[1m+++ /dev/null[m
+[36m@@ -1,115 +0,0 @@[m
+[31m-﻿namespace FSharpKoans[m
+[31m-open NUnit.Framework[m
+[31m-[m
+[31m-module ``11: String manipulation`` =[m
+[31m-    [<Test>][m
+[31m-    let ``01 Finding the length of a string`` () =[m
+[31m-        let a = "calamari"[m
+[31m-        let b = "It's-a me, Maaario!"[m
+[31m-        String.FILL_ME_IN a |> should equal 8[m
+[31m-        String.FILL_ME_IN b |> should equal 19[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``02 Getting a substring (Part 1).`` () =[m
+[31m-        let a = "bright"[m
+[31m-        a.[1..] |> should equal __[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``03 Getting a substring (Part 2).`` () =[m
+[31m-        let a = "bright"[m
+[31m-        a.[..3] |> should equal __[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``04 Getting a substring (Part 3).`` () =[m
+[31m-        let a = "bright"[m
+[31m-        a.[1..3] |> should equal __[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``05 Concatenating strings`` () =[m
+[31m-        let a = ["hip"; "hip"; "hurray"][m
+[31m-        String.FILL__ME_IN " " a |> should equal "hip hip hurray"[m
+[31m-        String.FILL__ME_IN __ __ |> should equal "hiphiphurray"[m
+[31m-        String.FILL__ME_IN __ __ |> should equal "hip! hip! hurray"[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``06 Getting a string from an integer or float`` () =[m
+[31m-        let a = 23[m
+[31m-        let b = 17.8[m
+[31m-        __ a |> should equal "23"[m
+[31m-        __ b |> should equal "17.8"[m
+[31m-[m
+[31m-    (*[m
+[31m-        The next few tests involve the `sprintf` function, which[m
+[31m-        creates a string.  The `printf` function does exactly the same[m
+[31m-        thing, except that instead of returning the string as output,[m
+[31m-        it returns `unit` (see AboutUnit.fs) and prints the string[m
+[31m-        to the console.[m
+[31m-    *)[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``07 String formatting: %s format specifier`` () =[m
+[31m-        let result = sprintf __ "perfect"[m
+[31m-        result |> should equal "Practice makes perfect."[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``08 String formatting: %d format specifier`` () =[m
+[31m-        let result = sprintf __ 9[m
+[31m-        result |> should equal "9 planets, Sir, endlessly circle, Sir"[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``09 String formatting: %b format specifier`` () =[m
+[31m-        let result = sprintf __ true[m
+[31m-        result |> should equal "It's true, it is."[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``10 String formatting: %c format specifier`` () =[m
+[31m-        let result = sprintf __ 'X'[m
+[31m-        result |> should equal "X marks the spot."[m
+[31m-[m
+[31m-    // specify a precision using %.Nf, where N is an integer[m
+[31m-    // that specifies the number of digits after the decimal point.[m
+[31m-    // The default precision is about 6, as near as I can tell.[m
+[31m-    [<Test>][m
+[31m-    let ``11 String formatting: %f format specifier`` () =[m
+[31m-        let result = sprintf __ 2.26[m
+[31m-        let condensed = sprintf __ 2.26[m
+[31m-        let rounded = sprintf __ 2.26[m
+[31m-        result |> should equal "Multiply by 2.260000, then triple"[m
+[31m-        condensed |> should equal "Multiply by 2.26, then triple"[m
+[31m-        rounded |> should equal "Multiply by 2.3, then triple"[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``12 String formatting: %A format specifier`` () =[m
+[31m-        let result = sprintf __ [7.4; 7.31; 6.55][m
+[31m-        result |> should equal "Control scores: [7.4; 7.31; 6.55] (after transform)"[m
+[31m-        let moreResult = sprintf __ (8,3,"UTC")[m
+[31m-        moreResult |> should equal "The (8, 3, \"UTC\") time-coordinate was used."[m
+[31m-[m
+[31m-   // double-up a % to get a % in.[m
+[31m-    [<Test>][m
+[31m-    let ``13 String formatting: Putting a '%' sign in`` () =[m
+[31m-        let result = sprintf __ 94.43[m
+[31m-        result |> should equal "I scored 94.43% on the test"[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``14 String formatting: Multiple format specifiers`` () =[m
+[31m-        let result = sprintf __ 3 5 0.6 "in other words" 60[m
+[31m-        result |> should equal "3 out of 5 is 0.6, or (in other words) 60 percent."[m
+[31m-[m
+[31m-   // But that's not all! See the full set of formatting capabilities here:[m
+[31m-   // https://msdn.microsoft.com/en-us/library/ee370560.aspx[m
+[31m-   // You might be particularly interested in %O, if you end up using[m
+[31m-   // objects with F#.[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``15 You can use the "usual" C# string methods from F#`` () =[m
+[31m-        let s = "  Dr Phil, PhD, MD, MC, Medicine Man  "[m
+[31m-        let ``first index of 'P'`` = s.FILL_ME_IN[m
+[31m-        let ``last index of 'P'`` = s.FILL_ME_IN[m
+[31m-        let ``lowercase version`` = s.FILL_ME_IN[m
+[31m-        let ``without surrounding space`` = s.FILL_ME_IN[m
+[31m-        ``first index of 'P'`` |> should equal 5[m
+[31m-        ``last index of 'P'`` |> should equal 11[m
+[31m-        ``lowercase version`` |> should equal "  dr phil, phd, md, mc, medicine man  "[m
+[31m-        ``without surrounding space`` |> should equal "Dr Phil, PhD, MD, MC, Medicine Man"[m
+[31m-        // ......... and many others![m
+[1mdiff --git a/FSharpKoans/AboutTesting.fs b/FSharpKoans/AboutTesting.fs[m
+[1mdeleted file mode 100644[m
+[1mindex 9dfffc0..0000000[m
+[1m--- a/FSharpKoans/AboutTesting.fs[m
+[1m+++ /dev/null[m
+[36m@@ -1,56 +0,0 @@[m
+[31m-﻿// a namespace CAN contain type definitions, but CANNOT contain bindings.[m
+[31m-// What's a "binding"?  You'll see in AboutBindings.fs.[m
+[31m-namespace FSharpKoans[m
+[31m-// The "open" directive allows you to access a namespace or module without[m
+[31m-// qualifying that access.  So if you wrote "open System", you'd be able to[m
+[31m-// write "Console.WriteLine" instead of "System.Console.WriteLine".[m
+[31m-// There's more about this in AboutModules.fs, later.[m
+[31m-open NUnit.Framework[m
+[31m-[m
+[31m-(*[m
+[31m-Each of the tests teaches you something about functional programming and/or F# basics.[m
+[31m-By the time you're done, you should have a basic understanding of how features[m
+[31m-fit together and are used.  It's highly recommended to read all the comments.[m
+[31m-[m
+[31m-In each test, you will see things like __ or FILL_ME_IN .[m
+[31m-ONLY change those things, and you'll do fine :).[m
+[31m-[m
+[31m-For some tests, you can just substitute possible things until the test passes.  But that won't[m
+[31m-teach you anything!  So try to understand what you're doing, or what the test is trying to[m
+[31m-show you, before you begin it.  That way, you will get the maximum amount of benefit from[m
+[31m-these exercises.  And if you have just fiddled to make it pass, try to figure out why that[m
+[31m-particular thing worked, and other things didn't.[m
+[31m-*)[m
+[31m-[m
+[31m-// A module can hold type definitions AND bindings.[m
+[31m-module ``01: About Testing`` = [m
+[31m-    (*[m
+[31m-        The two tests below also demonstrate how scoping in F# works.[m
+[31m-        Multiple lines in the same block must start on the NEXT line and be indented to the same level.[m
+[31m-        If the block consists of a single line, it can (usually) be put on the same line.[m
+[31m-[m
+[31m-        Names are scoped to be accessible within the block that they are a part of, and[m
+[31m-        (if the `rec` keyword is used) any sub-blocks.[m
+[31m-[m
+[31m-        The following example shows you how NOT to do it:[m
+[31m-    *)[m
+[31m-[m
+[31m-    //[<Test>][m
+[31m-    //let ``My whitespace is messed up!`` () = (1 + 1) |> should equal __[m
+[31m-        //(2 + 4) |> should equal __[m
+[31m-[m
+[31m-    (*[m
+[31m-        If you uncomment that example, you'll see that it won't compile.  That's[m
+[31m-        because it uses MULTIPLE lines, but tries to put the first line of the block on the SAME line,[m
+[31m-        and indent the rest of the lines of the block.  DON'T DO THIS![m
+[31m-    *)[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``01 How this works`` () = // In F#, any sequence of characters between `` marks can be identifiers.  ``This is a long method name`` is way better than ThisIsALongMethodName ![m
+[31m-        let expected_value = 1 + 1[m
+[31m-        let actual_value = 2 //start by changing this line[m
+[31m-        actual_value |> should equal expected_value[m
+[31m-   [m
+[31m-    // Easy, right? Now try one more.[m
+[31m-    [<Test>][m
+[31m-    let ``02 Fill in the values`` () = (1 + 1) |> should equal 2[m
+[1mdiff --git a/FSharpKoans/AboutTuples.fs b/FSharpKoans/AboutTuples.fs[m
+[1mdeleted file mode 100755[m
+[1mindex 3e7fd74..0000000[m
+[1m--- a/FSharpKoans/AboutTuples.fs[m
+[1m+++ /dev/null[m
+[36m@@ -1,53 +0,0 @@[m
+[31m-﻿namespace FSharpKoans[m
+[31m-open NUnit.Framework[m
+[31m-[m
+[31m-(*[m
+[31m-    A tuple is an ordered group of data.  A tuple is formed using the comma operator,[m
+[31m-    NOT brackets.  In F#, brackets are used for precedence and ordering, not to form tuples.[m
+[31m-[m
+[31m-    The number of elements in a tuple is called its *arity*.  We can call a tuple with 2[m
+[31m-    items a 2-tuple, a tuple with 5 elements is a 5-tuple, and so on.[m
+[31m-*)[m
+[31m-[m
+[31m-module ``06: Tuples`` = [m
+[31m-    [<Test>][m
+[31m-    let ``01 Creating tuples`` () = [m
+[31m-        let items = "apple", "dog"[m
+[31m-        items |> should equal ("apple", "dog")[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``02 Elements of a tuple can be different types`` () =[m
+[31m-        let stuff = "Rivet", false, 22.5[m
+[31m-        stuff |> should equal ("Rivet", false, 22.5 )[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``03 Decompose a tuple using tuple pattern`` () =[m
+[31m-        let aida = 2020, "cranberry", false, "wait, what?"[m
+[31m-        let a, b, c, d = aida[m
+[31m-        a |> should equal 2020[m
+[31m-        b |> should equal "cranberry"[m
+[31m-        c |> should equal false[m
+[31m-        d |> should equal "wait, what?"[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``04 Using a tuple in a match expression`` () =[m
+[31m-        let result =[m
+[31m-            match "Teresa", "pasta" with[m
+[31m-            | name, "veggies" -> name + " likes vegetables"[m
+[31m-            | name, "fish" -> name + " likes seafood"[m
+[31m-            | name, "chicken" -> name + " crows about their food"[m
+[31m-            | a, b -> a + " loves to eat " + b[m
+[31m-        result |> should equal "Teresa loves to eat pasta"   [m
+[31m-   [m
+[31m-    [<Test>][m
+[31m-    let ``05 The type of a tuple is the contained types separated by '*' symbols`` () =[m
+[31m-        let a = 3, 5, "hi", 'x', 7.22[m
+[31m-        a |> should be ofType<int * int * string * char * float>[m
+[31m-[m
+[31m-    [<Test>][m
+[31m-    let ``06 Using the wildcard pattern to structurally decompose tuples`` () = [m
+[31m-        // A single _ is a wildcard pattern, NOT a space to fill things in.[m
+[31m-        // Reminder: A wildcard pattern successfully matches ANYTHING.[m
+[31m-        let name, _, _, weapon_name = "Shinji", 9103, true, "Unit 01"[m
+[31m-        name |> should equal "Shinji"[m
+[31m-        weapon_name |> should equal "Unit 01"[m
+\ No newline at end of file[m
+[1mdiff --git a/FSharpKoans/AboutYou.fs b/FSharpKoans/AboutYou.fs[m
+[1mdeleted file mode 100644[m
+[1mindex 591e5d0..0000000[m
+[1m--- a/FSharpKoans/AboutYou.fs[m
+[1m+++ /dev/null[m
+[36m@@ -1,73 +0,0 @@[m
+[31m-﻿namespace FSharpKoans[m
+[31m-open NUnit.Framework[m
+[31m-[m
+[31m-(*[m
+[31m-Yay, you're here, so you know all about functional programming[m
+[31m-and F#, right?[m
+[31m-[m
+[31m-Um.[m
+[31m-[m
+[31m-Erm.[m
+[31m-[m
+[31m-Oh, this is awkward.[m
+[31m-[m
+[31m-How can I put this gently?[m
+[31m-[m
+[31m-No.[m
+[31m-[m
+[31m-No, you don't.  Sorry.[m
+[31m-[m
+[31m-You now know enough to write simple functional programs[m
+[31m-in F#.  But F# is a multi-paradigm language, and we haven't[m
+[31m-touched on its object-oriented capabilities or its opt-in dynamic[m
+[31m-resolution of types or its static duck-typing and constraints[m
+[31m-or extension methods or member functions or overloading or[m
+[31m-mutable variables or reference cells or .Net integration or interop[m
+[31m-or much of anything else.  There just hasn't been time, and that[m
+[31m-stuff hasn't been my focus.  I've tried to show you the functional[m
+[31m-side of things.  It's up to you to explore the non-functional stuff.[m
+[31m-[m
+[31m-But you know all about the functional side of things now, right?[m
+[31m-[m
+[31m-Ah.[m
+[31m-[m
+[31m-Well.[m
+[31m-[m
+[31m-So awkward![m
+[31m-[m
+[31m-No.  Sorry again, but the answer is "no".[m
+[31m-[m
+[31m-We haven't gone into lenses or monads or combinators or arrows[m
+[31m-or more advanced functional programming techniques.  Or a[m
+[31m-bunch of other things, now that I come to think of it...[m
+[31m-[m
+[31m-But, hey, don't be down.  Don't be despondent, don't be[m
+[31m-depressed!  Because you now know the fundamentals, and[m
+[31m-everything else in this paradigm is built on the fundamentals.[m
+[31m-You've got the mental tools to push on as far as you'd like.[m
+[31m-So, if you want to expand your knowledge and become a[m
+[31m-better functional programmer, there's no time like the present,[m
+[31m-while the functional stuff is still fresh in your head.  Come and[m
+[31m-talk to me, and/or visit a nice website like[m
+[31m-[m
+[31m-https://fsharpforfunandprofit.com[m
+[31m-[m
+[31m-or[m
+[31m-[m
+[31m-http://learnyouahaskell.com/chapters[m
+[31m-[m
+[31m-or even[m
+[31m-[m
+[31m-https://www.scheme.com/tspl4/[m
+[31m-[m
+[31m-... and I wish you the best as you embark on this voyage of[m
+[31m-discovery.  Functional programming is a rich, amazing experience.[m
+[31m-I hope that you'll enjoy it as much as I do ^_^.[m
+[31m-*)[m
+[31m-[m
+[31m-module ``14: About You`` =[m
+[31m-    [<Test>][m
+[31m-    let ``Where to now?`` () =[m
+[31m-        let resources = ["https://fsharpforfunandprofit.com"; "http://learnyouahaskell.com/chapters"; "https://www.scheme.com/tspl4/"][m
+[31m-        let visited = __ // <-- as you visit, add to a list here![m
+[31m-        visited |> should equal resources[m
+\ No newline at end of file[m
+[1mdiff --git a/FSharpKoans/FSharpKoans.fsproj b/FSharpKoans/FSharpKoans.fsproj[m
+[1mdeleted file mode 100755[m
+[1mindex cb2f914..0000000[m
+[1m--- a/FSharpKoans/FSharpKoans.fsproj[m
+[1m+++ /dev/null[m
+[36m@@ -1,34 +0,0 @@[m
+[31m-<Project Sdk="Microsoft.NET.Sdk">[m
+[31m-[m
+[31m-  <PropertyGroup>[m
+[31m-    <TargetFramework>netcoreapp3.1</TargetFramework>[m
+[31m-[m
+[31m-    <IsPackable>false</IsPackable>[m
+[31m-  </PropertyGroup>[m
+[31m-[m
+[31m-  <ItemGroup>[m
+[31m-    <Compile Include="Helpers.fs" />[m
+[31m-    <Compile Include="AboutTesting.fs" />[m
+[31m-    <Compile Include="AboutBinding.fs" />[m
+[31m-    <Compile Include="AboutFunctions.fs" />[m
+[31m-    <Compile Include="AboutMatching.fs" />[m
+[31m-    <Compile Include="AboutIteration.fs" />[m
+[31m-    <Compile Include="AboutTuples.fs" />[m
+[31m-    <Compile Include="AboutDiscriminatedUnions.fs" />[m
+[31m-    <Compile Include="AboutParametricPolymorphism.fs" />[m
+[31m-    <Compile Include="AboutOptions.fs" />[m
+[31m-    <Compile Include="AboutLists.fs" />[m
+[31m-    <Compile Include="AboutStrings.fs" />[m
+[31m-    <Compile Include="AboutListOperations.fs" />[m
+[31m-    <Compile Include="AboutRecords.fs" />[m
+[31m-    <Compile Include="AboutYou.fs" />[m
+[31m-  </ItemGroup>[m
+[31m-[m
+[31m-  <ItemGroup>[m
+[31m-    <PackageReference Include="FsUnit" Version="3.4.0" />[m
+[31m-    <PackageReference Include="nunit" Version="3.11.0" />[m
+[31m-    <PackageReference Include="NUnit3TestAdapter" Version="3.11.0" />[m
+[31m-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.0" />[m
+[31m-  </ItemGroup>[m
+[31m-[m
+[31m-</Project>[m
+\ No newline at end of file[m
+[1mdiff --git a/FSharpKoans/Helpers.fs b/FSharpKoans/Helpers.fs[m
+[1mdeleted file mode 100644[m
+[1mindex e3c510e..0000000[m
+[1m--- a/FSharpKoans/Helpers.fs[m
+[1m+++ /dev/null[m
+[36m@@ -1,134 +0,0 @@[m
+[31m-﻿(*[m
+[31m- _____  _____  _____ ______  _ [m
+[31m-/  ___||_   _||  _  || ___ \| |[m
+[31m-\ `--.   | |  | | | || |_/ /| |[m
+[31m- `--. \  | |  | | | ||  __/ | |[m
+[31m-/\__/ /  | |  \ \_/ /| |    |_|[m
+[31m-\____/   \_/   \___/ \_|    (_)[m
+[31m-                               [m
+[31m-No, no.  This isn't the file you're looking for.[m
+[31m-You should be starting on the next file, AboutTesting.fs.[m
+[31m-[m
+[31m-This file contains the Black Magic that makes everything else work.[m
+[31m-After you've finished the rest of the file, feel free to come[m
+[31m-back here and look.  Figure out what some of the keywords do :).[m
+[31m-*)[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[m
+[31m-[<AutoOpenAttribute>][m
+[31m-module FSharpKoans.Helpers[m
+[31m-[m
+[31m-open System[m
+[31m-open NUnit.Framework[m
+[31m-open FsUnit[m
+[31m-[m
+[31m-// note to self: this is a helpful regex: let ``.*``[^(]+=[m
+[31m-[m
+[31m-(*[m
+[31m-== Things That I Now Know About NUnit ==[m
+[31m-[m
+[31m-NUnit's test adapter is horrible about name-mangling.[m
+[31m-If a test ends with a bracket ), or a bracket ) and then whitespace,[m
+[31m-it refuses to find the location of the test.  Why?  'cos NUnit.[m
+[31m-So that's why we have method names ending with ")." instead.[m
+[31m-[m
+[31m-And ordering tests is apparently far beyond its capabilities... :-/[m
+[31m-*)[m
+[31m-[m
+[31m-let inline __<'a> : ^a = failwith "Replace the __ with something else to pass this test."[m
+[31m-let inline ___<'a> : ^a list = failwith "Replace the ___ with something else to pass this test."[m
+[31m-let [<Literal>] FILL__ME_IN = "FILL ME IN"[m
+[31m-let [<Literal>] FILL_ME__IN = 1234[m
+[31m-[m
+[31m-type FILL_ME_IN =[m
+[31m-    static member (+) (a : FILL_ME_IN, b : FILL_ME_IN) = failwith "+ failed"[m
+[31m-    static member (*) (a : FILL_ME_IN, b : FILL_ME_IN) = failwith "* failed"[m
+[31m-[m
+[31m-module String =[m
+[31m-    let FILL_ME_IN _ = ()[m
+[31m-    let FILL__ME_IN _ _ = ()[m
+[31m-type String with[m
+[31m-    member __.FILL_ME_IN = ()[m
+[31m-[m
+[31m-let inline (|???|) a b = failwith "Replace the |???| with an appropriate operator to pass this test."[m
+[31m-[m
+[31m-let equal = equal[m
+[31m-let throw = throw[m
+[31m-let inline be<'a> = id<'a>[m
+[31m-let inline ofType<'a> =[m
+[31m-    {[m
+[31m-        new Constraints.Constraint () with[m
+[31m-            override __.ApplyTo<'b> (x : 'b) =[m
+[31m-                match box x with[m
+[31m-                | :? 'a -> Constraints.ConstraintResult(__, x, true)[m
+[31m-                | _ -> instanceOfType<'a>.ApplyTo x[m
+[31m-    }[m
+[31m-let ``me`` =[m
+[31m-    System.Reflection.Assembly.GetExecutingAssembly().FullName[m
+[31m-let inline should (f : 'a -> #Constraints.Constraint) x (y : obj) =[m
+[31m-    let c = f x[m
+[31m-    let y =[m
+[31m-        match y with[m
+[31m-        | :? (unit -> unit) -> box (TestDelegate(y :?> unit -> unit))[m
+[31m-        | _ -> y[m
+[31m-    try[m
+[31m-        Assert.That(y, c)[m
+[31m-        // if we compare for equality, then compare types for equality as well[m
+[31m-        if y <> null && c.GetType().AssemblyQualifiedName = typeof<Constraints.EqualConstraint>.AssemblyQualifiedName then[m
+[31m-            // make an exception for empty lists, so that strongly type List[int] equals List[obj][m
+[31m-            // Otherwise, we have to make the tests look uuuuuuuuuugly.[m
+[31m-            // If they're NOT empty, then we shouldn't get here because of the Assert.That check.[m
+[31m-            match y.GetType().IsGenericType with[m
+[31m-            | true ->[m
+[31m-                let t0 = y.GetType().GetGenericTypeDefinition().AssemblyQualifiedName[m
+[31m-                let t1 = typedefof<FSharp.Collections.list<_>>.AssemblyQualifiedName[m
+[31m-                if t0 <> t1 then Assert.IsInstanceOf(typeof<'a>, y)[m
+[31m-            | false -> Assert.IsInstanceOf(typeof<'a>, y)[m
+[31m-    with[m
+[31m-    | ex ->[m
+[31m-        // ok, let's pull out the line number.  We'll need to[m
+[31m-        // shove our way up the stack (SLOOOW) to do this reliably![m
+[31m-        let trace = System.Diagnostics.StackTrace(ex, true);[m
+[31m-        let sf =[m
+[31m-            trace.GetFrames ()[m
+[31m-            |> Array.filter (fun sf ->[m
+[31m-                sf.GetMethod().DeclaringType.Assembly.FullName = ``me``[m
+[31m-            ) |> Seq.last[m
+[31m-        let lineno = sf.GetFileLineNumber()[m
+[31m-        let methodname = sf.GetMethod().Name[m
+[31m-        let file =[m
+[31m-            sf.GetFileName()[m
+[31m-            |> System.IO.Path.GetFileName[m
+[31m-        failwithf "There's a problem somewhere around line %d in \"%s\" (file: %s). What's wrong, I wonder?" lineno methodname file[m
+\ No newline at end of file[m
+[1mdiff --git a/GroupByClass.png b/GroupByClass.png[m
+[1mdeleted file mode 100644[m
+[1mindex 2cc7c51..0000000[m
+Binary files a/GroupByClass.png and /dev/null differ
+[1mdiff --git a/License.txt b/License.txt[m
+[1mdeleted file mode 100755[m
+[1mindex 668e6f3..0000000[m
+[1m--- a/License.txt[m
+[1m+++ /dev/null[m
+[36m@@ -1,13 +0,0 @@[m
+[31m-Copyright 2010 Chris Marinos[m
+[31m-[m
+[31m-Licensed under the Apache License, Version 2.0 (the "License");[m
+[31m-you may not use this file except in compliance with the License.[m
+[31m-You may obtain a copy of the License at[m
+[31m-[m
+[31m-http://www.apache.org/licenses/LICENSE-2.0[m
+[31m-[m
+[31m-Unless required by applicable law or agreed to in writing, software[m
+[31m-distributed under the License is distributed on an "AS IS" BASIS,[m
+[31m-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.[m
+[31m-See the License for the specific language governing permissions and[m
+[31m-limitations under the License.[m
+[1mdiff --git a/README.markdown b/README.markdown[m
+[1mdeleted file mode 100755[m
+[1mindex 7d9bb03..0000000[m
+[1m--- a/README.markdown[m
+[1m+++ /dev/null[m
+[36m@@ -1,25 +0,0 @@[m
+[31m-# Functional Koans - F# #[m
+[31m-[m
+[31m-The goal of these is to teach you functional programming in general, and F# in specific, through testing.[m
+[31m-[m
+[31m-## Quick Start ##[m
+[31m-[m
+[31m-1. If you're using Visual Studio (or VS Code), you'll need to install the [NUnit 3 Test Adaptor Extension](https://marketplace.visualstudio.com/items?itemName=NUnitDevelopers.NUnit3TestAdapter).  If you're running Xamarin, you need to be able to run NUnit tests (but, to my everlasting shame, I have not worked with such a setup, and cannot offer advice!).  I'm using VS2015, but everything should work with VS2012 upwards &mdash; if not, please let me know.[m
+[31m-2. Clone this repository.[m
+[31m-3. Open & build the solution.  This should download and install FsUnit and dependencies (via [NuGet](http://nuget.org/)) for you as well.[m
+[31m-4. ![Group by class](GroupByClass.png?raw=true)[m
+[31m-[m
+[31m-   Open up the test explorer and set it to group by class.[m
+[31m-5. ![Test Explorer, VS2015](ExplorerScreenshot.jpg?raw=true)[m
+[31m-[m
+[31m-   Now run all the tests.[m
+[31m-[m
+[31m-Oh no!  The tests are all failing!  Start with the first test (you should be able to double-click on it), fix it, move on to the next :smile:.  It will help to read all the comments in a file.  Each test has something to teach you (I hope!).[m
+[31m-[m
+[31m-## Acknowledgements[m
+[31m-[m
+[31m-This repo was originally forked from Chris Marinos' original [F# Koans](https://github.com/ChrisMarinos/FSharpKoans) (which was, in turn, inspired by EdgeCase's fantastic [Ruby koans](http://github.com/edgecase/ruby_koans)).  There isn't a lot of Chris's code left &mdash; much like [Theseus' ship](https://en.wikipedia.org/wiki/Ship_of_Theseus), the vast majority of the "planks" have been replaced! &mdash; but this project would probably never have begun had it not been for his work.[m
+[31m-[m
+[31m-## Contributions[m
+[31m-[m
+[31m-Contributions, corrections, and better ways of teaching through testing are most welcome!  And, of course, bug reports are just as welcome.  The usual way of doing these things via GitHub applies :smile:.[m

@@ -1,0 +1,167 @@
+[33m451812e[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m completed all but one test
+[33mc120896[m 1st submission of prac 1
+[33mbbf9df6[m Update 2 for 2020
+[33m4ea5804[m Update 1 for 2020
+[33m400a467[m Typed comparison for Result<'a,'b>
+[33meb9871f[m Add necessary input for `converge`
+[33m5145f95[m Fix ignored tests
+[33m599b203[m Align tests with the notes
+[33m5dafe6a[m Remove extraneous old nuget folder
+[33m76c8f61[m Ignore .vs directory
+[33m6ad28a3[m Modifications to work with .Net Core SDK 2.2
+[33mc29b918[m Alter README to refer to the correct NUnit Test Adaptor
+[33mafe864a[m Change comments for correctness & concision.
+[33m9f5ab9e[m Upgraded NUnit, FsUnit, F# for 2017 class
+[33mb32d442[m Added a comment about printf
+[33mf130c4b[m AboutOptions moved up to an earlier slot.
+[33m0b4a11b[m Tests clarified & comments added as necessary during first run-through.
+[33mc9e81d5[m First run-through demonstrated some issues with testing.  These changes should fix those.
+[33mad3e369[m Changes to comments.  And VS feels that it needs to do some feng shui around the .fsproj, so I'll let it do its thing.
+[33m5c40a50[m Trying to get README images to show up - data URLs not working.
+[33m17a128d[m A new README - Chris Marinos' one wasn't applicable any more...
+[33m24cb810[m Duplication of words removed...
+[33m088f32f[m Numbered all of the tests. This will cause problems (knock-on effect, anyone?) if I ever need to insert a test, but it's apparently the best way to get NUnit to order tests properly when displayed!
+[33mbc664ad[m NUnit's test adapter is horrible about name-mangling. If a test ends with a bracket ), or a bracket ) and then whitespace, it refuses to find the location of the test.  Why?  'cos NUnit. So that's why we have method names ending with ")." instead.
+[33m3c698a6[m Some passing tests, changed them to fail.
+[33ma461537[m A complete revamp, with some significant extensions, for 2016.
+[33m36b0ffd[m Bugfixes, caught during the prac
+[33m79be4b0[m Bugfix, caught by JC Bailey
+[33mafb6135[m Should be good enough for public consumption now.
+[33m19d3626[m Bugfixes & modifications as I solve
+[33mfef04ec[m Tiny change to wording
+[33m45f2e0f[m Whew! Compiling, and everything seems to work. I'll have to test, then re-space everything later on.
+[33m64aaeb5[m Using FsUnit; got a .gitignore in; working through tests from top to bottom.  Not compiling yet.
+[33mb854fd5[m Slimmed down: delete .Test and .Core, use NUnit directly instead
+[33me23d72d[m Upgrade to VS2013, remove 2008 .sln
+[33m582ea93[m Merge pull request #31 from tmpreston/fsharp
+[33mec21fa3[m Merge pull request #32 from CalMlynarczyk/patch-1
+[33mf9da08f[m Instructions to run the Koans via command line under Mono
+[33m327df4c[m Typo
+[33m7f2c1cc[m Merge pull request #29 from PatrickMcDonald/fsharp
+[33m522cd6d[m Migrate to automatic package restore
+[33mc485de0[m Merge pull request #26 from skalinets/fsharp
+[33m9919166[m renames test changing Where to Filter
+[33m257eb8e[m Merge pull request #22 from eskitek/fixes
+[33m2f01694[m Fixed typo
+[33mdd4b445[m fixed a couple of minor issues with koan reordering
+[33m55de10e[m Merge branch 'ReorderKoans' of git://github.com/tcshao/FSharpKoans into fsharp
+[33m3ac1840[m Merge pull request #21 from nataren/misc_fixes
+[33m5d24a3c[m Fix typo
+[33m4f16501[m Merge pull request #20 from nataren/misc_fixes
+[33m7f2c8ba[m Fix typo
+[33m04325c6[m Fix typo
+[33me85b98b[m Fix typo
+[33m6329cf4[m reordered koans
+[33m085bbf4[m Update AboutUnit.fs
+[33m8806779[m rename solution file
+[33mcf56374[m don't use power for last string koan since it is confusing (** isn't defined for ints)
+[33m394631a[m add extra assertion for modules
+[33m95159d4[m merged in static loading changes from ryan
+[33m9c54cdc[m Merge pull request #11 from harold/patch-1
+[33mf8b0041[m Merge pull request #12 from harold/patch-2
+[33m8770a7d[m Update FSharpKoans/AboutOptionTypes.fs
+[33maab1daf[m Update FSharpKoans/AboutTheStockExample.fs
+[33m3141493[m added license file
+[33m5e5c4cc[m cleaned up language and possible code conflicts to avoid possible licensing restrictions with Ruby Koans
+[33m7d4f30f[m Fix compatibility issue with VS2010.
+[33mbb5dff3[m Extend the use of the KoanAttribute to work on classes and provide a facility to specify the sort order.
+[33m6f809e9[m Upgrade projects to work with VS2012
+[33m2084c29[m Move to static methods for koans.
+[33mb0c382d[m Move to static methods for koans.
+[33m3aee06b[m Enable NuGet package restore.
+[33me6e4969[m merged into trunk
+[33md7e0541[m added a koan about the difference between int and double... may need to come back to this later
+[33m0b4f506[m fixed problem with discriminated unions in fsproj file
+[33m4da9e8b[m added more explanatory text and a few extra koans based on the interactive/web version
+[33m8ffa80d[m fixed spelling of discriminated unions
+[33ma204a2f[m added a stock example
+[33m689c9b7[m removed opening of unnecessary System.CodeDom namespace
+[33ma8c84e4[m Merge pull request #6 from scitesy/fsharp
+[33mad5baab[m Provided a more fitting name for the multiline compression test
+[33mdc13d2f[m Add more tests to the About strings koan
+[33m062298c[m Merge pull request #5 from readysetmark/patches
+[33mdfc10c6[m Fixed typo PatternPatching -> PatternMatching Added "about opened modules" to path to enlightenment
+[33mad071fe[m refactored the koan runner code
+[33m545e38f[m added a map function for KoanResult
+[33m2e81012[m remove ideaboard
+[33mae6c2bd[m updated proj file to include new koans
+[33m866bcf0[m updated pretty print dictionary koan to use city instead of address
+[33m051bc93[m use correct asserts for array koans
+[33m11652e8[m added koans for arrays and .net collections
+[33mb1f98ea[m tweaked readme
+[33m3cb0fec[m changed comment in about classes
+[33m1367468[m corrected comparison for last koan in option type
+[33m8611fb2[m got rid of extra __ in option type koans
+[33mfa05b5c[m corrected spelling of soldier
+[33m6ff5d47[m use sprintf for formatting
+[33mf22088d[m tweaked string comments
+[33m7e2f116[m tweaked a couple comments
+[33md566854[m added string formatting koans
+[33mfe27571[m fixed build problems
+[33m70747fa[m added looping koans
+[33mb7105b6[m reordered thigns a bit and removed project placeholder
+[33mfb14cfe[m added koans for unit
+[33m0e82352[m added koans for classes
+[33ma323445[m added koans for modules
+[33mec38d31[m added descriminated union koans
+[33md56761e[m added koans for the order of evaluation and backward pipe operatorr
+[33md7ba1f2[m changed person to character for record type objecs
+[33m7dc938a[m added new files to path of enlightenment
+[33m6c47b1e[m more record type koans
+[33mef70c9c[m added some extra koans for option types
+[33m1dce9d3[m added some koans for record types
+[33mfdc6595[m added some kaons for option types
+[33m0a93140[m improved the flow for the currying/partial application section
+[33m48608ee[m tweaked help text for non curried functions
+[33m62c00de[m added a koan for uncurried functions
+[33m455d263[m added koan for partial application
+[33m8bf0459[m added koan for lambdas
+[33m6a46fbe[m added another type annotation koan
+[33mdd6cf30[m added a parenthetical to the type annotation koan
+[33m7e702e9[m added a koan about type annotations
+[33m84a378d[m added a prompt to trigger the compiler error for capturing a mutable variable in a closure
+[33m94c59e1[m added a koan for closure
+[33m83906e7[m updated tuple create koan to be less ambiguous about the expected value
+[33mf827a46[m updated parenthetical for first pattern matching instance
+[33m7cd96f7[m modified the parenthetical note for if statements to make a bit more sense
+[33maed1736[m change confusing return values for first branching koan
+[33m9f8ceff[m use nunit as a nuget reference for core as well
+[33m38d1613[m Merge branch 'fsharp' of ssh://github.com/ChrisMarinos/FSharpKoans into fsharp
+[33mbdabfad[m use nunit as a nuget reference
+[33m73cff9c[m Merge pull request #2 from marcushammarberg/patch-1
+[33m323b698[m Updated with a link to the F# PowerPack
+[33mf4d13fc[m modified README to include a note about nuget being required
+[33m0b393a1[m Merge pull request #1 from mgroves/patch-1
+[33m66c134d[m Is this spelled incorrectly?
+[33md25456b[m updated readme to remove powerpack prerequisite and note different install configurations
+[33m7688e7b[m corrected bad location of the F# powerpack in README
+[33m7a7e6e9[m fixed typo in README
+[33m34ce03a[m Updated readme
+[33mcc0b44b[m removing compile on the fly koans and features to improve mono compatibility and make things easier to understand
+[33m6033f20[m fixed bad powerpack reference and updated to use nuget
+[33m29c9972[m added stub for first project - 'fizzbuzz'
+[33m7d031b3[m added koans about list immutability, added/changed wording on some list comments
+[33mc075892[m corrected a typo in the pipelining koan comments
+[33md24b321[m tweaked wording on help comments a little, fixed a couple of bugs based on feedback
+[33m1abee57[m Minor tweaks for a couple of koans based on user feedback.
+[33m8b4a9e2[m Should have ran the readme through a converter first. Looks like it's better now.
+[33m317ac8c[m a couple more tweaks to the readme
+[33m19e600b[m Improved the text for the F# readme
+[33mf562324[m whoops, correcting a bug in PathToEnlightenment
+[33m21dd144[m removed koan for lambdas since I didn't end up needing them for this run through
+[33mab89013[m added koans for pipelining and more lists koans
+[33m0b97dfd[m Added koans for functions
+[33m2a1576f[m Made sure koans worked for a fresh 2010 RC install. Added a koan for creating mutable variables
+[33m3709ca5[m some tweaks based on a test run through the koans
+[33m5a63cc7[m checking in some other changes that I missed earlier
+[33m69771fa[m Added koans for tuples.
+[33ma1384e0[m Added seq and branching koans
+[33mecb29a7[m tweaked naming/asserts for a couple of the 'let' koans
+[33md3f576f[m Added koans for lists
+[33m6be8e93[m added a 2010 solution. Added more koans.
+[33mdfa1e94[m replaced NUnit functions with F# wrappers. Also trying backtick naming.
+[33m470fc2c[m Missed a file
+[33m78aa77d[m initial rev of F# branch
+[33m44ec1ea[m added an F# readme
+[33mb51e7f1[m adding readme
+[33meca1c9e[m initial list
